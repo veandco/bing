@@ -1,0 +1,20 @@
+*~
+*.sw?
+
+# Executables
+bingspeech_example
+
+# CMake
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+
+# Audio files
+*.wav
+*.raw
