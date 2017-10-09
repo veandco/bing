@@ -33,6 +33,19 @@ target_link_libraries(
   ${JSONCPP_LIBRARIES}
 )
 
+# Bing Speech (Synthesis)
+add_executable(
+  bingspeech_synthesis_example
+  src/bingspeech_synthesis_example.cpp
+)
+target_link_libraries(
+  bingspeech_synthesis_example
+  bing
+  ${LIBSOUP_LIBRARIES}
+  ${JSONCPP_LIBRARIES}
+)
+
 # Install
 install(TARGETS bingspeech_recognition_example DESTINATION bin)
+install(TARGETS bingspeech_synthesis_example DESTINATION bin)
 install(TARGETS bing DESTINATION lib)

@@ -9,6 +9,7 @@
 namespace Speech {
     const char *         FETCH_TOKEN_URI      = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
     const char *         INTERACTIVE_URL      = "https://speech.platform.bing.com/speech/recognition/interactive/cognitiveservices/v1";
+    const char *         SYNTHESIZE_URL       = "https://speech.platform.bing.com/synthesize";
     const int            RENEW_TOKEN_INTERVAL = 9; // Minutes before renewing token
 
     static SoupSession * mSession;
@@ -154,5 +155,39 @@ namespace Speech {
             fprintf(stdout, "\n");
         }
         fprintf(stdout, "\n");
+    }
+
+
+    ////////////////
+    // Synthesize //
+    ////////////////
+
+    SynthesizeResponse synthesize(const char *text)
+    {
+        SoupMessage *msg;
+        SoupMessageBody *body;
+        SynthesizeResponse res;
+        char auth[1024] = "Bearer ";
+        char format[] = "raw-16khz-16bit-mono-pcm";
+        char data[1024] = "<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='Female' name='Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)'>";
+
+        // Initialize data
+        strcat(data, text);
+        strcat(data, "</voice></speak>");
+
+        // Initialize authorization token
+        strcat(auth, mToken);
+
+        msg = soup_message_new("POST", SYNTHESIZE_URL);
+        soup_message_set_request(msg, "application/ssml+xml", SOUP_MEMORY_COPY, data, strlen(data));
+        soup_message_headers_append(msg->request_headers, "Authorization", auth);
+        soup_message_headers_append(msg->request_headers, "X-Microsoft-OutputFormat", format);
+        soup_message_headers_append(msg->request_headers, "User-Agent", "libbing");
+        soup_session_send_message(mSession, msg);
+        g_object_get(msg, "response-body", &body, NULL);
+        res.data = body->data;
+        res.length = body->length;
+
+        return res;
     }
 }

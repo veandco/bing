@@ -7,6 +7,19 @@
 using namespace std;
 
 namespace Speech {
+
+    void     init();
+    char *   authenticate(const char *subscriptionKey);
+    char *   token();
+    char *   fetchToken(const char *subscriptionKey);
+    void     renewToken();
+    gboolean onRenewToken(gpointer data);
+
+
+    /////////////////
+    // Recognition //
+    /////////////////
+
     struct Result {
         float  confidence;
         string lexical;
@@ -27,13 +40,18 @@ namespace Speech {
         vector<Result> nbest;
     };
 
-    void     init();
-    char *   authenticate(const char *subscriptionKey);
-    char *   token();
-    char *   fetchToken(const char *subscriptionKey);
-    void     renewToken();
-    gboolean onRenewToken(gpointer data);
-
     Response recognize(const void *data, int len);
     Response parseResponse(const void *data, int len);
+
+
+    ////////////////
+    // Synthesize //
+    ////////////////
+
+    struct SynthesizeResponse {
+        const char *data;
+        int length;
+    };
+
+    SynthesizeResponse synthesize(const char *text);
 }
