@@ -2,7 +2,12 @@
 *.sw?
 
 # Executables
-bingspeech_example
+bingspeech_recognition_example
+bingspeech_synthesis_example
+
+# Libraries
+*.a
+*.so
 
 # CMake
 CMakeCache.txt
