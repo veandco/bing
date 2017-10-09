@@ -41,7 +41,7 @@ namespace Speech {
     };
 
     Response recognize(const void *data, int len);
-    Response parseResponse(const void *data, int len);
+    Response parseResponse(const void *data);
 
 
     ////////////////

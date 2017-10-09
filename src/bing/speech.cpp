@@ -15,7 +15,6 @@ namespace Speech {
     static SoupSession * mSession;
     static const char *  mSubscriptionKey;
     static char *        mToken;
-    static guint         mCallbackId;
 
     void init()
     {
@@ -36,6 +35,7 @@ namespace Speech {
         mSubscriptionKey = subscriptionKey;
         mToken = Speech::fetchToken(mSubscriptionKey);
         g_timeout_add(Speech::RENEW_TOKEN_INTERVAL * 60 * 1000, Speech::onRenewToken, NULL);
+        return mToken;
     }
 
     char * token()
@@ -65,9 +65,10 @@ namespace Speech {
         fprintf(stdout, "%s\n", "Renewed access token");
     }
 
-    gboolean onRenewToken(gpointer data)
+    gboolean onRenewToken(void *)
     {
         Speech::renewToken();
+        return G_SOURCE_CONTINUE;
     }
 
     Response recognize(const void *data, int len)
@@ -91,10 +92,10 @@ namespace Speech {
         soup_session_send_message(mSession, msg);
         g_object_get(msg, "response-body", &body, NULL);
 
-        return Speech::parseResponse(body->data, body->length);
+        return Speech::parseResponse(body->data);
     }
 
-    Response parseResponse(const void *data, int len)
+    Response parseResponse(const void *data)
     {
         using namespace std;
         using namespace Json;
@@ -116,8 +117,8 @@ namespace Speech {
         res.duration = root["Duration"].asInt();
         root = root["NBest"];
         if (root.isArray()) {
-            for (int i = 0; i < root.size(); i++) {
-                Value item = root[i];
+            for (size_t i = 0; i < root.size(); i++) {
+                Value item = root[static_cast<int>(i)];
                 Result result;
                 
                 result.confidence = item["Confidence"].asFloat();
@@ -128,6 +129,8 @@ namespace Speech {
                 res.nbest.push_back(result);
             }
         }
+
+        return res;
     }
 
     Response::Response()
@@ -144,8 +147,8 @@ namespace Speech {
         fprintf(stdout, "Offset: %d\n", offset);
         fprintf(stdout, "Duration: %d\n", duration);
         fprintf(stdout, "\n");
-        for (int i = 0; i < nbest.size(); i++) {
-            fprintf(stdout, "NBest #%d\n", i);
+        for (size_t i = 0; i < nbest.size(); i++) {
+            fprintf(stdout, "NBest #%zd\n", i);
             fprintf(stdout, "-------------------\n");
             fprintf(stdout, "Confidence: %.8f\n", nbest[i].confidence);
             fprintf(stdout, "Lexical: %s\n", nbest[i].lexical.c_str());

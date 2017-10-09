@@ -6,9 +6,6 @@ int main()
 {
     Speech::SynthesizeResponse res;
     FILE *file;
-    struct stat fileStat;
-    char *buf;
-    int nread;
 
     // Initialize Bing
     Bing::init();

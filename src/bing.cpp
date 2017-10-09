@@ -36,8 +36,9 @@ namespace Bing {
         }
     }
 
-    gpointer threadCallback(gpointer data)
+    gpointer threadCallback()
     {
         Bing::run();
+        return NULL;
     }
 }
