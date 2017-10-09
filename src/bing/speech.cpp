@@ -86,6 +86,7 @@ namespace Speech {
         // Initialize authorization token
         strcat(auth, mToken);
 
+        // Do POST request
         msg = soup_message_new("POST", url);
         soup_message_set_request(msg, "audio/wav; codec=\"\"audio/pcm\"\"; samplerate=16000", SOUP_MEMORY_COPY, (const char *) data, len);
         soup_message_headers_append(msg->request_headers, "Authorization", auth);
@@ -181,6 +182,7 @@ namespace Speech {
         // Initialize authorization token
         strcat(auth, mToken);
 
+        // Do POST request
         msg = soup_message_new("POST", SYNTHESIZE_URL);
         soup_message_set_request(msg, "application/ssml+xml", SOUP_MEMORY_COPY, data, strlen(data));
         soup_message_headers_append(msg->request_headers, "Authorization", auth);
