@@ -13,15 +13,26 @@ include_directories(
   ${JSONCPP_INCLUDE_DIRS}
 )
 
+# Library
+add_library(
+  bing
+  SHARED
+  src/bing.cpp
+  src/bing/speech.cpp
+)
+
 # Bing Speech
 add_executable(
   bingspeech_example
   src/bingspeech_example.cpp
-  src/bing.cpp
-  src/bing/speech.cpp
 )
 target_link_libraries(
   bingspeech_example
+  bing
   ${LIBSOUP_LIBRARIES}
   ${JSONCPP_LIBRARIES}
 )
+
+# Install
+install(TARGETS bingspeech_example DESTINATION bin)
+install(TARGETS bing DESTINATION lib)
