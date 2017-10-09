@@ -21,18 +21,18 @@ add_library(
   src/bing/speech.cpp
 )
 
-# Bing Speech
+# Bing Speech (Recognition)
 add_executable(
-  bingspeech_example
-  src/bingspeech_example.cpp
+  bingspeech_recognition_example
+  src/bingspeech_recognition_example.cpp
 )
 target_link_libraries(
-  bingspeech_example
+  bingspeech_recognition_example
   bing
   ${LIBSOUP_LIBRARIES}
   ${JSONCPP_LIBRARIES}
 )
 
 # Install
-install(TARGETS bingspeech_example DESTINATION bin)
+install(TARGETS bingspeech_recognition_example DESTINATION bin)
 install(TARGETS bing DESTINATION lib)
