@@ -9,6 +9,7 @@ using namespace std;
 namespace Speech {
 
     void     init();
+    void     quit();
     char *   authenticate(const char *subscriptionKey);
     char *   token();
     char *   fetchToken(const char *subscriptionKey);

@@ -27,5 +27,11 @@ int main()
 
     // Close file
     fclose(file);
+
+    // Quit Bing Speech
+    Speech::quit();
+
+    // Quit Bing
+    Bing::quit();
 }
 

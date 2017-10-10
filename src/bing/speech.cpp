@@ -27,6 +27,11 @@ namespace Speech {
         g_object_unref(logger);
     }
 
+    void quit()
+    {
+        g_object_unref(mSession);
+    }
+
     char * authenticate(const char *subscriptionKey)
     {
         if (mToken)

@@ -34,4 +34,10 @@ int main()
     // Close file
     free(buf);
     fclose(file);
+
+    // Quit Bing Speech
+    Speech::quit();
+
+    // Quit Bing
+    Bing::quit();
 }
