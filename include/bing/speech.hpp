@@ -32,7 +32,7 @@ namespace Speech {
         Response();
         ~Response();
 
-        void print() const;
+        void           print() const;
 
         string         recognitionStatus;
         int            offset;
@@ -49,8 +49,8 @@ namespace Speech {
     ////////////////
 
     struct SynthesizeResponse {
-        const char *data;
-        int length;
+        const char * data;
+        int          length;
     };
 
     SynthesizeResponse synthesize(const char *text);
