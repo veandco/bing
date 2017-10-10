@@ -29,6 +29,7 @@ int main()
 
     // Recognize text from the audio data
     res = Speech::recognize(buf, nread);
+    //res = Speech::recognize(buf, nread, "zh-CN");
     res.print();
 
     // Close file

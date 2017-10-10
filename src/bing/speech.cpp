@@ -87,7 +87,7 @@ namespace Speech {
         return G_SOURCE_CONTINUE;
     }
 
-    RecognitionResponse recognize(const void *data, int len)
+    RecognitionResponse recognize(const void *data, int len, const char *lang)
     {
         SoupMessage *msg;
         SoupMessageBody *body;
@@ -96,8 +96,7 @@ namespace Speech {
         char auth[1024] = "Bearer ";
 
         // Initialize API URL
-        strcpy(url, INTERACTIVE_URL);
-        strcat(url, "?language=en-US&format=detailed");
+        sprintf(url, "%s?language=%s&format=detailed", INTERACTIVE_URL, lang);
 
         // Initialize authorization token
         strcat(auth, mToken);

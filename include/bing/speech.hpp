@@ -38,7 +38,7 @@ namespace Speech {
         vector<RecognitionResult> nbest;
     };
 
-    RecognitionResponse recognize(const void *data, int len);
+    RecognitionResponse recognize(const void *data, int len, const char *lang = "en-US");
     RecognitionResponse parseRecognitionResponse(const void *data);
 
 
