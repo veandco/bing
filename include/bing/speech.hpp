@@ -30,9 +30,6 @@ namespace Speech {
     };
 
     struct RecognitionResponse {
-        RecognitionResponse();
-        ~RecognitionResponse();
-
         void                      print() const;
 
         string                    recognitionStatus;

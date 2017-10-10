@@ -150,14 +150,6 @@ namespace Speech {
         return res;
     }
 
-    RecognitionResponse::RecognitionResponse()
-    {
-    }
-
-    RecognitionResponse::~RecognitionResponse()
-    {
-    }
-
     void RecognitionResponse::print() const
     {
         fprintf(stdout, "RecognitionStatus: %s\n", recognitionStatus.c_str());
