@@ -71,11 +71,11 @@ namespace Speech {
         return G_SOURCE_CONTINUE;
     }
 
-    Response recognize(const void *data, int len)
+    RecognitionResponse recognize(const void *data, int len)
     {
         SoupMessage *msg;
         SoupMessageBody *body;
-        Response res;
+        RecognitionResponse res;
         char url[256] = { 0 };
         char auth[1024] = "Bearer ";
 
@@ -93,15 +93,15 @@ namespace Speech {
         soup_session_send_message(mSession, msg);
         g_object_get(msg, "response-body", &body, NULL);
 
-        return Speech::parseResponse(body->data);
+        return Speech::parseRecognitionResponse(body->data);
     }
 
-    Response parseResponse(const void *data)
+    RecognitionResponse parseRecognitionResponse(const void *data)
     {
         using namespace std;
         using namespace Json;
 
-        Response res;
+        RecognitionResponse res;
         CharReaderBuilder builder;
         string s((char *) data);
         string err;
@@ -109,7 +109,7 @@ namespace Speech {
         Value root;
 
         if (!parseFromStream(builder, in, &root, &err)) {
-            fprintf(stderr, "parseResponse(): %s\n", err.c_str());
+            fprintf(stderr, "parseRecognitionResponse(): %s\n", err.c_str());
             return res;
         }
 
@@ -120,7 +120,7 @@ namespace Speech {
         if (root.isArray()) {
             for (size_t i = 0; i < root.size(); i++) {
                 Value item = root[static_cast<int>(i)];
-                Result result;
+                RecognitionResult result;
                 
                 result.confidence = item["Confidence"].asFloat();
                 result.lexical = item["Lexical"].asString();
@@ -134,15 +134,15 @@ namespace Speech {
         return res;
     }
 
-    Response::Response()
+    RecognitionResponse::RecognitionResponse()
     {
     }
 
-    Response::~Response()
+    RecognitionResponse::~RecognitionResponse()
     {
     }
 
-    void Response::print() const
+    void RecognitionResponse::print() const
     {
         fprintf(stdout, "RecognitionStatus: %s\n", recognitionStatus.c_str());
         fprintf(stdout, "Offset: %d\n", offset);

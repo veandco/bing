@@ -20,7 +20,7 @@ namespace Speech {
     // Recognition //
     /////////////////
 
-    struct Result {
+    struct RecognitionResult {
         float  confidence;
         string lexical;
         string itn;
@@ -28,20 +28,20 @@ namespace Speech {
         string display;
     };
 
-    struct Response {
-        Response();
-        ~Response();
+    struct RecognitionResponse {
+        RecognitionResponse();
+        ~RecognitionResponse();
 
-        void           print() const;
+        void                      print() const;
 
-        string         recognitionStatus;
-        int            offset;
-        int            duration;
-        vector<Result> nbest;
+        string                    recognitionStatus;
+        int                       offset;
+        int                       duration;
+        vector<RecognitionResult> nbest;
     };
 
-    Response recognize(const void *data, int len);
-    Response parseResponse(const void *data);
+    RecognitionResponse recognize(const void *data, int len);
+    RecognitionResponse parseRecognitionResponse(const void *data);
 
 
     ////////////////

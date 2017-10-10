@@ -4,7 +4,7 @@
 
 int main()
 {
-    Speech::Response res;
+    Speech::RecognitionResponse res;
     FILE *file;
     struct stat fileStat;
     char *buf;
