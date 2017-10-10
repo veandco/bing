@@ -149,6 +149,11 @@ namespace Speech {
         return res;
     }
 
+    bool RecognitionResponse::hasMatch() const
+    {
+        return recognitionStatus == "Success";
+    }
+
     void RecognitionResponse::print() const
     {
         fprintf(stdout, "RecognitionStatus: %s\n", recognitionStatus.c_str());

@@ -30,6 +30,7 @@ namespace Speech {
     };
 
     struct RecognitionResponse {
+        bool                      hasMatch() const;
         void                      print() const;
 
         string                    recognitionStatus;
