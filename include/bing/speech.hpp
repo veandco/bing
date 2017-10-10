@@ -46,10 +46,30 @@ namespace Speech {
     // Synthesize //
     ////////////////
 
+    namespace Voice {
+        struct Font {
+            const char *lang;
+            const char *gender;
+            const char *name;
+        };
+
+        namespace en_US {
+            extern Font ZiraRUS;
+            extern Font JessaRUS;
+            extern Font BenjaminRUS;
+        }
+
+        namespace zh_CN {
+            extern Font HuihuiRUS;
+            extern Font YaoyaoApollo;
+            extern Font KangkangApollo;
+        }
+    }
+
     struct SynthesizeResponse {
         const char * data;
         int          length;
     };
 
-    SynthesizeResponse synthesize(const char *text);
+    SynthesizeResponse synthesize(const char *text, Voice::Font font = Voice::en_US::ZiraRUS);
 }

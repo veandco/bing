@@ -174,18 +174,59 @@ namespace Speech {
     // Synthesize //
     ////////////////
 
-    SynthesizeResponse synthesize(const char *text)
+    namespace Voice {
+        namespace en_US {
+            Font ZiraRUS = Font {
+                "en-US",
+                "Female",
+                "Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)"
+            };
+
+            Font JessaRUS = Font {
+                "en-US",
+                "Female",
+                "Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)"
+            };
+
+            Font BenjaminRUS = Font {
+                "en-US",
+                "Male",
+                "Microsoft Server Speech Text to Speech Voice (en-US, BenjaminRUS)"
+            };
+        }
+
+        namespace zh_CN {
+            Font HuihuiRUS = Font {
+                "zh-CN",
+                "Female",
+                "Microsoft Server Speech Text to Speech Voice (zh-CN, HuihuiRUS)"
+            };
+
+            Font YaoyaoApollo = Font {
+                "zh-CN",
+                "Female",
+                "Microsoft Server Speech Text to Speech Voice (zh-CN, Yaoyao, Apollo)"
+            };
+
+            Font KangkangApollo = Font {
+                "zh-CN",
+                "Male",
+                "Microsoft Server Speech Text to Speech Voice (zh-CN, Kangkang, Apollo)"
+            };
+        }
+    }
+
+    SynthesizeResponse synthesize(const char *text, Voice::Font font)
     {
         SoupMessage *msg;
         SoupMessageBody *body;
         SynthesizeResponse res;
         char auth[1024] = "Bearer ";
         char format[] = "raw-16khz-16bit-mono-pcm";
-        char data[1024] = "<speak version='1.0' xml:lang='en-US'><voice xml:lang='en-US' xml:gender='Female' name='Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)'>";
+        char data[1024] = { 0 };
 
         // Initialize data
-        strcat(data, text);
-        strcat(data, "</voice></speak>");
+        sprintf(data, "<speak version='1.0' xml:lang='en-US'><voice xml:lang='%s' xml:gender='%s' name='%s'>%s</voice></speak>", font.lang, font.gender, font.name, text);
 
         // Initialize authorization token
         strcat(auth, mToken);

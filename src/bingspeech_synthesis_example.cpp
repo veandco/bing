@@ -16,6 +16,7 @@ int main()
 
     // Recognize text from the audio data
     res = Speech::synthesize("Hi there. Nice to meet you");
+    //res = Speech::synthesize("大家都指望着我吶", Speech::Voice::zh_CN::HuihuiRUS);
 
     // Write synthesized audio to a file
     file = fopen("test.raw", "w+");
