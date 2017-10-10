@@ -29,7 +29,15 @@ namespace Speech {
 
     void quit()
     {
-        g_object_unref(mSession);
+        if (mSession) {
+            g_object_unref(mSession);
+            mSession = NULL;
+        }
+
+        if (mToken) {
+            free(mToken);
+            mToken = NULL;
+        }
     }
 
     char * authenticate(const char *subscriptionKey)
@@ -66,6 +74,9 @@ namespace Speech {
 
     void renewToken()
     {
+        if (mToken)
+            free(mToken);
+
         mToken = Speech::fetchToken(mSubscriptionKey);
         fprintf(stdout, "%s\n", "Renewed access token");
     }
