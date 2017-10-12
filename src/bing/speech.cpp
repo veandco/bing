@@ -17,7 +17,8 @@ const QString SYNTHESIZE_URL       = "https://speech.platform.bing.com/synthesiz
 const int     RENEW_TOKEN_INTERVAL = 9; // Minutes before renewing token
 
 Speech::Speech(QObject *parent) :
-    QObject(parent)
+    QObject(parent),
+    mRenewTokenTimer(nullptr)
 {
     SoupLogger *logger;
     SoupLoggerLogLevel logLevel = SOUP_LOGGER_LOG_BODY;
