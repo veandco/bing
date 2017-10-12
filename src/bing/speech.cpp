@@ -7,10 +7,10 @@
 #include <sstream>
 
 namespace Speech {
-    const char *         FETCH_TOKEN_URI      = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
-    const char *         INTERACTIVE_URL      = "https://speech.platform.bing.com/speech/recognition/interactive/cognitiveservices/v1";
-    const char *         SYNTHESIZE_URL       = "https://speech.platform.bing.com/synthesize";
-    const int            RENEW_TOKEN_INTERVAL = 9; // Minutes before renewing token
+    const char * FETCH_TOKEN_URI      = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
+    const char * INTERACTIVE_URL      = "https://speech.platform.bing.com/speech/recognition/interactive/cognitiveservices/v1";
+    const char * SYNTHESIZE_URL       = "https://speech.platform.bing.com/synthesize";
+    const int    RENEW_TOKEN_INTERVAL = 9; // Minutes before renewing token
 
     static SoupSession * mSession;
     static const char *  mSubscriptionKey;

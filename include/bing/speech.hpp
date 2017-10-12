@@ -30,12 +30,13 @@ namespace Speech {
     };
 
     struct RecognitionResponse {
-        bool                      hasMatch() const;
-        void                      print() const;
+        bool hasMatch() const;
+        void print() const;
 
-        string                    recognitionStatus;
-        int                       offset;
-        int                       duration;
+        string recognitionStatus;
+        int    offset;
+        int    duration;
+
         vector<RecognitionResult> nbest;
     };
 
