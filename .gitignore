@@ -23,3 +23,7 @@ CTestTestfile.cmake
 # Audio files
 *.wav
 *.raw
+
+# Qt
+moc_*
+*.cpp_parameters

@@ -4,19 +4,16 @@
 
 int main()
 {
+    Bing::Speech speech;
     QByteArray output;
     FILE *file;
 
-    // Initialize Bing
-    Bing::init();
-
     // Initialize Bing Speech
-    Speech::init();
-    Speech::authenticate("7394827f916d4b48b7a3feb7bfe62aa1");
+    speech.authenticate("7394827f916d4b48b7a3feb7bfe62aa1");
 
     // Recognize text from the audio data
-    output = Speech::synthesize("Hi there. Nice to meet you");
-    //output = Speech::synthesize("大家都指望着我吶", Speech::Voice::zh_CN::HuihuiRUS);
+    output = speech.synthesize("Hi there. Nice to meet you");
+    //output = speech.synthesize("大家都指望着我吶", Speech::Voice::zh_CN::HuihuiRUS);
 
     // Write synthesized audio to a file
     file = fopen("test.raw", "w+");
@@ -28,11 +25,4 @@ int main()
 
     // Close file
     fclose(file);
-
-    // Quit Bing Speech
-    Speech::quit();
-
-    // Quit Bing
-    Bing::quit();
 }
-

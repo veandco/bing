@@ -16,12 +16,17 @@ include_directories(
   ${LIBSOUP_INCLUDE_DIRS}
 )
 
+qt5_wrap_cpp(
+  all_moc
+  include/bing/speech.hpp
+)
+
 # Library
 add_library(
   bing
   SHARED
-  src/bing.cpp
   src/bing/speech.cpp
+  ${all_moc}
 )
 target_link_libraries(
   bing
@@ -32,6 +37,7 @@ target_link_libraries(
 add_executable(
   bingspeech_recognition_example
   src/bingspeech_recognition_example.cpp
+  ${all_moc}
 )
 target_link_libraries(
   bingspeech_recognition_example
@@ -44,6 +50,7 @@ target_link_libraries(
 add_executable(
   bingspeech_synthesis_example
   src/bingspeech_synthesis_example.cpp
+  ${all_moc}
 )
 target_link_libraries(
   bingspeech_synthesis_example
@@ -53,9 +60,9 @@ target_link_libraries(
 )
 
 # Install
+install(TARGETS bing DESTINATION lib)
 install(TARGETS bingspeech_recognition_example DESTINATION bin)
 install(TARGETS bingspeech_synthesis_example DESTINATION bin)
-install(TARGETS bing DESTINATION lib)
 install(
     DIRECTORY include/ DESTINATION include PATTERN "*.hpp"
     PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ

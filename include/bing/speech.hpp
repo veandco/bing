@@ -1,23 +1,38 @@
 #pragma once
 
 #include <libsoup/soup.h>
+#include <QObject>
 #include <QByteArray>
 #include <QString>
 #include <QList>
 
-using namespace std;
+class QTimer;
 
-namespace Speech {
+namespace Bing {
 
-    void     init();
-    void     quit();
-    QString  authenticate(const QString &subscriptionKey);
-    QString  token();
-    QString  fetchToken(const QString &subscriptionKey);
-    void     renewToken();
-    gboolean onRenewToken(gpointer data);
+namespace Voice {
+    struct Font {
+        QString lang;
+        QString gender;
+        QString name;
+    };
 
+    namespace en_US {
+        extern Font ZiraRUS;
+        extern Font JessaRUS;
+        extern Font BenjaminRUS;
+    }
 
+    namespace zh_CN {
+        extern Font HuihuiRUS;
+        extern Font YaoyaoApollo;
+        extern Font KangkangApollo;
+    }
+}
+
+class Speech : public QObject {
+    Q_OBJECT
+public:
     /////////////////
     // Recognition //
     /////////////////
@@ -41,33 +56,30 @@ namespace Speech {
         QList<RecognitionResult> nbest;
     };
 
-    RecognitionResponse recognize(const QByteArray &data, const QString &lang = "en-US");
-    RecognitionResponse parseRecognitionResponse(const QByteArray &data);
-
-
     ////////////////
     // Synthesize //
     ////////////////
 
-    namespace Voice {
-        struct Font {
-            QString lang;
-            QString gender;
-            QString name;
-        };
+    Speech(QObject *parent = nullptr);
+    ~Speech();
 
-        namespace en_US {
-            extern Font ZiraRUS;
-            extern Font JessaRUS;
-            extern Font BenjaminRUS;
-        }
+    QString authenticate(const QString &subscriptionKey);
+    QString token() const;
+    QString fetchToken(const QString &subscriptionKey);
 
-        namespace zh_CN {
-            extern Font HuihuiRUS;
-            extern Font YaoyaoApollo;
-            extern Font KangkangApollo;
-        }
-    }
-
+    RecognitionResponse recognize(const QByteArray &data, const QString &lang = "en-US");
     QByteArray synthesize(const QString &text, Voice::Font font = Voice::en_US::ZiraRUS);
+
+private:
+    SoupSession * mSession;
+    QString       mSubscriptionKey;
+    QString       mToken;
+    QTimer *      mRenewTokenTimer;
+
+    RecognitionResponse parseRecognitionResponse(const QByteArray &data);
+
+private slots:
+    void renewToken();
+};
+
 }
