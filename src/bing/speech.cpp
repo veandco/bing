@@ -3,8 +3,10 @@
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
-#include <json/json.h>
 #include <sstream>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 namespace Speech {
     const char * FETCH_TOKEN_URI      = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
@@ -108,45 +110,37 @@ namespace Speech {
         soup_session_send_message(mSession, msg);
         g_object_get(msg, "response-body", &body, NULL);
 
-        return Speech::parseRecognitionResponse(body->data);
+        return Speech::parseRecognitionResponse(body->data, body->length);
     }
 
-    RecognitionResponse parseRecognitionResponse(const void *data)
+    RecognitionResponse parseRecognitionResponse(const char *data, int len)
     {
-        using namespace std;
-        using namespace Json;
-
         RecognitionResponse res;
-        CharReaderBuilder builder;
-        string s((char *) data);
-        string err;
-        istringstream in(s);
-        Value root;
+        QJsonParseError error;
+        QJsonDocument doc = QJsonDocument::fromJson(QByteArray::fromRawData(data, len), &error);
+        QJsonObject root;
 
-        if (!parseFromStream(builder, in, &root, &err)) {
-            fprintf(stderr, "parseRecognitionResponse(): %s\n", err.c_str());
+        if (error.error != QJsonParseError::NoError)
             return res;
-        }
 
-        res.recognitionStatus = root["RecognitionStatus"].asString();
-        res.offset = root["Offset"].asInt();
-        res.duration = root["Duration"].asInt();
-        root = root["NBest"];
-        if (root.isArray()) {
-            for (size_t i = 0; i < root.size(); i++) {
-                Value item = root[static_cast<int>(i)];
-                RecognitionResult result;
-                
-                result.confidence = item["Confidence"].asFloat();
-                result.lexical = item["Lexical"].asString();
-                result.itn = item["ITN"].asString();
-                result.maskedItn = item["MaskedITN"].asString();
-                result.display = item["Display"].asString();
-                res.nbest.push_back(result);
-            }
-        }
+        root = doc.object();
+        res.recognitionStatus = root["RecognitionStatus"].toString().toStdString();
+        res.offset = root["Offset"].toInt();
+        res.duration = root["Duration"].toInt();
 
-        return res;
+        auto nbest = root["NBest"].toArray();
+        for (auto i = 0; i < nbest.size(); i++) {
+            RecognitionResult result;
+            QJsonObject item = nbest[i].toObject();
+
+            result.confidence = item["Confidence"].toDouble();
+            result.lexical = item["Lexical"].toString().toStdString();
+            result.itn = item["ITN"].toString().toStdString();
+            result.maskedItn = item["MaskedITN"].toString().toStdString();
+            result.display = item["Display"].toString().toStdString();
+
+            res.nbest.push_back(result);
+        }
     }
 
     bool RecognitionResponse::hasMatch() const

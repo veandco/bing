@@ -3,14 +3,17 @@ project(libbing)
 
 set(CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -Wextra")
 
+# Qt
+find_package(Qt5Core)
+find_package(Qt5Multimedia)
+set(CMAKE_INCLUDE_CURRENT_DIR ON)
+
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(LIBSOUP libsoup-2.4)
-pkg_check_modules(JSONCPP jsoncpp)
 
 include_directories(
   include
   ${LIBSOUP_INCLUDE_DIRS}
-  ${JSONCPP_INCLUDE_DIRS}
 )
 
 # Library
@@ -19,6 +22,10 @@ add_library(
   SHARED
   src/bing.cpp
   src/bing/speech.cpp
+)
+target_link_libraries(
+  bing
+  Qt5::Core
 )
 
 # Bing Speech (Recognition)
@@ -30,7 +37,7 @@ target_link_libraries(
   bingspeech_recognition_example
   bing
   ${LIBSOUP_LIBRARIES}
-  ${JSONCPP_LIBRARIES}
+  Qt5::Core
 )
 
 # Bing Speech (Synthesis)
@@ -42,7 +49,7 @@ target_link_libraries(
   bingspeech_synthesis_example
   bing
   ${LIBSOUP_LIBRARIES}
-  ${JSONCPP_LIBRARIES}
+  Qt5::Core
 )
 
 # Install

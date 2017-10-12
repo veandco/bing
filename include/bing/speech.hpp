@@ -41,7 +41,7 @@ namespace Speech {
     };
 
     RecognitionResponse recognize(const void *data, int len, const char *lang = "en-US");
-    RecognitionResponse parseRecognitionResponse(const void *data);
+    RecognitionResponse parseRecognitionResponse(const char *data, int len);
 
 
     ////////////////
