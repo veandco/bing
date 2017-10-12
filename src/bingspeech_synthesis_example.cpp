@@ -4,7 +4,7 @@
 
 int main()
 {
-    Speech::SynthesizeResponse res;
+    QByteArray output;
     FILE *file;
 
     // Initialize Bing
@@ -15,8 +15,8 @@ int main()
     Speech::authenticate("7394827f916d4b48b7a3feb7bfe62aa1");
 
     // Recognize text from the audio data
-    res = Speech::synthesize("Hi there. Nice to meet you");
-    //res = Speech::synthesize("大家都指望着我吶", Speech::Voice::zh_CN::HuihuiRUS);
+    output = Speech::synthesize("Hi there. Nice to meet you");
+    //output = Speech::synthesize("大家都指望着我吶", Speech::Voice::zh_CN::HuihuiRUS);
 
     // Write synthesized audio to a file
     file = fopen("test.raw", "w+");
@@ -24,7 +24,7 @@ int main()
         fprintf(stdout, "Failed to open test.raw\n");
         return 1;
     }
-    fwrite(res.data, 1, res.length, file);
+    fwrite(output.data(), 1, output.size(), file);
 
     // Close file
     fclose(file);

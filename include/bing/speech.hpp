@@ -1,8 +1,9 @@
 #pragma once
 
 #include <libsoup/soup.h>
-#include <string>
-#include <vector>
+#include <QByteArray>
+#include <QString>
+#include <QList>
 
 using namespace std;
 
@@ -10,9 +11,9 @@ namespace Speech {
 
     void     init();
     void     quit();
-    char *   authenticate(const char *subscriptionKey);
-    char *   token();
-    char *   fetchToken(const char *subscriptionKey);
+    QString  authenticate(const QString &subscriptionKey);
+    QString  token();
+    QString  fetchToken(const QString &subscriptionKey);
     void     renewToken();
     gboolean onRenewToken(gpointer data);
 
@@ -22,26 +23,26 @@ namespace Speech {
     /////////////////
 
     struct RecognitionResult {
-        float  confidence;
-        string lexical;
-        string itn;
-        string maskedItn;
-        string display;
+        double  confidence;
+        QString lexical;
+        QString itn;
+        QString maskedItn;
+        QString display;
     };
 
     struct RecognitionResponse {
         bool hasMatch() const;
         void print() const;
 
-        string recognitionStatus;
-        int    offset;
-        int    duration;
+        QString recognitionStatus;
+        int     offset;
+        int     duration;
 
-        vector<RecognitionResult> nbest;
+        QList<RecognitionResult> nbest;
     };
 
-    RecognitionResponse recognize(const void *data, int len, const char *lang = "en-US");
-    RecognitionResponse parseRecognitionResponse(const char *data, int len);
+    RecognitionResponse recognize(const QByteArray &data, const QString &lang = "en-US");
+    RecognitionResponse parseRecognitionResponse(const QByteArray &data);
 
 
     ////////////////
@@ -50,9 +51,9 @@ namespace Speech {
 
     namespace Voice {
         struct Font {
-            const char *lang;
-            const char *gender;
-            const char *name;
+            QString lang;
+            QString gender;
+            QString name;
         };
 
         namespace en_US {
@@ -68,10 +69,5 @@ namespace Speech {
         }
     }
 
-    struct SynthesizeResponse {
-        const char * data;
-        int          length;
-    };
-
-    SynthesizeResponse synthesize(const char *text, Voice::Font font = Voice::en_US::ZiraRUS);
+    QByteArray synthesize(const QString &text, Voice::Font font = Voice::en_US::ZiraRUS);
 }

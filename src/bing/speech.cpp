@@ -9,14 +9,14 @@
 #include <QJsonArray>
 
 namespace Speech {
-    const char * FETCH_TOKEN_URI      = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
-    const char * INTERACTIVE_URL      = "https://speech.platform.bing.com/speech/recognition/interactive/cognitiveservices/v1";
-    const char * SYNTHESIZE_URL       = "https://speech.platform.bing.com/synthesize";
-    const int    RENEW_TOKEN_INTERVAL = 9; // Minutes before renewing token
+    const QString FETCH_TOKEN_URI      = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
+    const QString INTERACTIVE_URL      = "https://speech.platform.bing.com/speech/recognition/interactive/cognitiveservices/v1";
+    const QString SYNTHESIZE_URL       = "https://speech.platform.bing.com/synthesize";
+    const int     RENEW_TOKEN_INTERVAL = 9; // Minutes before renewing token
 
     static SoupSession * mSession;
-    static const char *  mSubscriptionKey;
-    static char *        mToken;
+    static QString       mSubscriptionKey;
+    static QString       mToken;
 
     void init()
     {
@@ -36,16 +36,12 @@ namespace Speech {
             mSession = NULL;
         }
 
-        if (mToken) {
-            free(mToken);
-            mToken = NULL;
-        }
+        mToken.clear();
     }
 
-    char * authenticate(const char *subscriptionKey)
+    QString authenticate(const QString &subscriptionKey)
     {
-        if (mToken)
-            free(mToken);
+        mToken.clear();
 
         mSubscriptionKey = subscriptionKey;
         mToken = Speech::fetchToken(mSubscriptionKey);
@@ -53,32 +49,28 @@ namespace Speech {
         return mToken;
     }
 
-    char * token()
+    QString token()
     {
         return mToken;
     }
 
-    char * fetchToken(const char *subscriptionKey)
+    QString fetchToken(const QString &subscriptionKey)
     {
         SoupMessage *msg;
         SoupMessageBody *body;
-        char *token = NULL;
 
-        msg = soup_message_new("POST", FETCH_TOKEN_URI);
+        msg = soup_message_new("POST", FETCH_TOKEN_URI.toUtf8().data());
         soup_message_headers_append(msg->request_headers, "Content-Length", "0");
-        soup_message_headers_append(msg->request_headers, "Ocp-Apim-Subscription-Key", subscriptionKey);
+        soup_message_headers_append(msg->request_headers, "Ocp-Apim-Subscription-Key", subscriptionKey.toUtf8().data());
         soup_session_send_message(mSession, msg);
         g_object_get(msg, "response-body", &body, NULL);
-        token = strdup(body->data);
 
-        return token;
+        return QByteArray(body->data, body->length);
     }
 
     void renewToken()
     {
-        if (mToken)
-            free(mToken);
-
+        mToken.clear();
         mToken = Speech::fetchToken(mSubscriptionKey);
         fprintf(stdout, "%s\n", "Renewed access token");
     }
@@ -89,42 +81,36 @@ namespace Speech {
         return G_SOURCE_CONTINUE;
     }
 
-    RecognitionResponse recognize(const void *data, int len, const char *lang)
+    RecognitionResponse recognize(const QByteArray &data, const QString &lang)
     {
         SoupMessage *msg;
         SoupMessageBody *body;
         RecognitionResponse res;
-        char url[256] = { 0 };
-        char auth[1024] = "Bearer ";
-
-        // Initialize API URL
-        sprintf(url, "%s?language=%s&format=detailed", INTERACTIVE_URL, lang);
-
-        // Initialize authorization token
-        strcat(auth, mToken);
+        QString url = INTERACTIVE_URL + "?language=" + lang + "&format=detailed";
+        QString auth = "Bearer " + mToken;
 
         // Do POST request
-        msg = soup_message_new("POST", url);
-        soup_message_set_request(msg, "audio/wav; codec=\"\"audio/pcm\"\"; samplerate=16000", SOUP_MEMORY_COPY, (const char *) data, len);
-        soup_message_headers_append(msg->request_headers, "Authorization", auth);
+        msg = soup_message_new("POST", url.toUtf8().data());
+        soup_message_set_request(msg, "audio/wav; codec=\"\"audio/pcm\"\"; samplerate=16000", SOUP_MEMORY_COPY, data.data(), data.size());
+        soup_message_headers_append(msg->request_headers, "Authorization", auth.toUtf8().data());
         soup_session_send_message(mSession, msg);
         g_object_get(msg, "response-body", &body, NULL);
 
-        return Speech::parseRecognitionResponse(body->data, body->length);
+        return Speech::parseRecognitionResponse(QByteArray(body->data, body->length));
     }
 
-    RecognitionResponse parseRecognitionResponse(const char *data, int len)
+    RecognitionResponse parseRecognitionResponse(const QByteArray &data)
     {
         RecognitionResponse res;
         QJsonParseError error;
-        QJsonDocument doc = QJsonDocument::fromJson(QByteArray::fromRawData(data, len), &error);
+        QJsonDocument doc = QJsonDocument::fromJson(data, &error);
         QJsonObject root;
 
         if (error.error != QJsonParseError::NoError)
             return res;
 
         root = doc.object();
-        res.recognitionStatus = root["RecognitionStatus"].toString().toStdString();
+        res.recognitionStatus = root["RecognitionStatus"].toString();
         res.offset = root["Offset"].toInt();
         res.duration = root["Duration"].toInt();
 
@@ -134,10 +120,10 @@ namespace Speech {
             QJsonObject item = nbest[i].toObject();
 
             result.confidence = item["Confidence"].toDouble();
-            result.lexical = item["Lexical"].toString().toStdString();
-            result.itn = item["ITN"].toString().toStdString();
-            result.maskedItn = item["MaskedITN"].toString().toStdString();
-            result.display = item["Display"].toString().toStdString();
+            result.lexical = item["Lexical"].toString();
+            result.itn = item["ITN"].toString();
+            result.maskedItn = item["MaskedITN"].toString();
+            result.display = item["Display"].toString();
 
             res.nbest.push_back(result);
         }
@@ -152,18 +138,18 @@ namespace Speech {
 
     void RecognitionResponse::print() const
     {
-        fprintf(stdout, "RecognitionStatus: %s\n", recognitionStatus.c_str());
+        fprintf(stdout, "RecognitionStatus: %s\n", recognitionStatus.toUtf8().data());
         fprintf(stdout, "Offset: %d\n", offset);
         fprintf(stdout, "Duration: %d\n", duration);
         fprintf(stdout, "\n");
-        for (size_t i = 0; i < nbest.size(); i++) {
-            fprintf(stdout, "NBest #%zd\n", i);
+        for (auto i = 0; i < nbest.size(); i++) {
+            fprintf(stdout, "NBest #%d\n", i);
             fprintf(stdout, "-------------------\n");
             fprintf(stdout, "Confidence: %.8f\n", nbest[i].confidence);
-            fprintf(stdout, "Lexical: %s\n", nbest[i].lexical.c_str());
-            fprintf(stdout, "ITN: %s\n", nbest[i].itn.c_str());
-            fprintf(stdout, "MaskedITN: %s\n", nbest[i].maskedItn.c_str());
-            fprintf(stdout, "Display: %s\n", nbest[i].display.c_str());
+            fprintf(stdout, "Lexical: %s\n", nbest[i].lexical.toUtf8().data());
+            fprintf(stdout, "ITN: %s\n", nbest[i].itn.toUtf8().data());
+            fprintf(stdout, "MaskedITN: %s\n", nbest[i].maskedItn.toUtf8().data());
+            fprintf(stdout, "Display: %s\n", nbest[i].display.toUtf8().data());
             fprintf(stdout, "\n");
         }
         fprintf(stdout, "\n");
@@ -216,32 +202,24 @@ namespace Speech {
         }
     }
 
-    SynthesizeResponse synthesize(const char *text, Voice::Font font)
+    QByteArray synthesize(const QString &text, Voice::Font font)
     {
         SoupMessage *msg;
         SoupMessageBody *body;
-        SynthesizeResponse res;
-        char auth[1024] = "Bearer ";
-        char format[] = "raw-16khz-16bit-mono-pcm";
-        char data[1024] = { 0 };
-
-        // Initialize data
-        sprintf(data, "<speak version='1.0' xml:lang='en-US'><voice xml:lang='%s' xml:gender='%s' name='%s'>%s</voice></speak>", font.lang, font.gender, font.name, text);
-
-        // Initialize authorization token
-        strcat(auth, mToken);
+        QString auth = "Bearer " + mToken;
+        QString format = "raw-16khz-16bit-mono-pcm";
+        QString dataStr = "<speak version='1.0' xml:lang='en-US'><voice xml:lang='" + font.lang + "' xml:gender='" + font.gender + "' name='" + font.name + "'>" + text + "</voice></speak>";
+        QByteArray data = dataStr.toUtf8();
 
         // Do POST request
-        msg = soup_message_new("POST", SYNTHESIZE_URL);
-        soup_message_set_request(msg, "application/ssml+xml", SOUP_MEMORY_COPY, data, strlen(data));
-        soup_message_headers_append(msg->request_headers, "Authorization", auth);
-        soup_message_headers_append(msg->request_headers, "X-Microsoft-OutputFormat", format);
+        msg = soup_message_new("POST", SYNTHESIZE_URL.toUtf8().data());
+        soup_message_set_request(msg, "application/ssml+xml", SOUP_MEMORY_COPY, data.data(), data.size());
+        soup_message_headers_append(msg->request_headers, "Authorization", auth.toUtf8().data());
+        soup_message_headers_append(msg->request_headers, "X-Microsoft-OutputFormat", format.toUtf8().data());
         soup_message_headers_append(msg->request_headers, "User-Agent", "libbing");
         soup_session_send_message(mSession, msg);
         g_object_get(msg, "response-body", &body, NULL);
-        res.data = body->data;
-        res.length = body->length;
 
-        return res;
+        return QByteArray(body->data, body->length);
     }
 }

@@ -28,7 +28,7 @@ int main()
     nread = fread(buf, 1, fileStat.st_size, file);
 
     // Recognize text from the audio data
-    res = Speech::recognize(buf, nread);
+    res = Speech::recognize(QByteArray(buf, nread));
     //res = Speech::recognize(buf, nread, "zh-CN");
     res.print();
 
