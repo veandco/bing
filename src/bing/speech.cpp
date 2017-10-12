@@ -141,6 +141,8 @@ namespace Speech {
 
             res.nbest.push_back(result);
         }
+
+        return res;
     }
 
     bool RecognitionResponse::hasMatch() const
