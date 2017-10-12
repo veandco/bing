@@ -50,7 +50,7 @@ QString Speech::authenticate(const QString &subscriptionKey)
 
     mRenewTokenTimer = new QTimer(this);
     connect(mRenewTokenTimer, &QTimer::timeout, this, &Speech::renewToken);
-    mRenewTokenTimer->start(RENEW_TOKEN_INTERVAL * 60);
+    mRenewTokenTimer->start(RENEW_TOKEN_INTERVAL * 60 * 1000);
 
     return mToken;
 }
