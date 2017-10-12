@@ -49,3 +49,7 @@ target_link_libraries(
 install(TARGETS bingspeech_recognition_example DESTINATION bin)
 install(TARGETS bingspeech_synthesis_example DESTINATION bin)
 install(TARGETS bing DESTINATION lib)
+install(
+    DIRECTORY include/ DESTINATION include PATTERN "*.hpp"
+    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+)
