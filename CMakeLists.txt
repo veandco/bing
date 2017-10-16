@@ -6,6 +6,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -Wextra")
 # Qt
 find_package(Qt5Core)
 find_package(Qt5Concurrent)
+find_package(Qt5Gui)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(PkgConfig REQUIRED)
@@ -20,6 +21,7 @@ qt5_wrap_cpp(
   all_moc
   include/bing/speech.hpp
   include/bing/qnamaker.hpp
+  include/bing/customvision.hpp
 )
 
 # Library
@@ -28,11 +30,13 @@ add_library(
   SHARED
   src/bing/speech.cpp
   src/bing/qnamaker.cpp
+  src/bing/customvision.cpp
   ${all_moc}
 )
 target_link_libraries(
   bing
   Qt5::Core
+  Qt5::Gui
 )
 
 # Bing Speech (Recognition)
@@ -73,6 +77,20 @@ target_link_libraries(
   ${LIBSOUP_LIBRARIES}
   Qt5::Core
   Qt5::Concurrent
+)
+
+# Bing Custom Vision
+add_executable(
+  bingcustomvision_example
+  src/bingcustomvision_example.cpp
+  ${all_moc}
+)
+target_link_libraries(
+  bingcustomvision_example
+  bing
+  ${LIBSOUP_LIBRARIES}
+  Qt5::Core
+  Qt5::Gui
 )
 
 # Install
