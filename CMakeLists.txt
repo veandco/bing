@@ -5,7 +5,6 @@ set(CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -Wextra")
 
 # Qt
 find_package(Qt5Core)
-find_package(Qt5Multimedia)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(PkgConfig REQUIRED)
@@ -19,6 +18,7 @@ include_directories(
 qt5_wrap_cpp(
   all_moc
   include/bing/speech.hpp
+  include/bing/qnamaker.hpp
 )
 
 # Library
@@ -26,6 +26,7 @@ add_library(
   bing
   SHARED
   src/bing/speech.cpp
+  src/bing/qnamaker.cpp
   ${all_moc}
 )
 target_link_libraries(
@@ -54,6 +55,19 @@ add_executable(
 )
 target_link_libraries(
   bingspeech_synthesis_example
+  bing
+  ${LIBSOUP_LIBRARIES}
+  Qt5::Core
+)
+
+# Bing QnaMaker
+add_executable(
+  bingqnamaker_example
+  src/bingqnamaker_example.cpp
+  ${all_moc}
+)
+target_link_libraries(
+  bingqnamaker_example
   bing
   ${LIBSOUP_LIBRARIES}
   Qt5::Core
