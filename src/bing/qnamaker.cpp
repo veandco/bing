@@ -52,9 +52,15 @@ QString QnaMaker::generateAnswer(const QString &question, const QString &knowled
 
     // Get answer
     QByteArray answerJson(body->data, body->length);
-    auto answerObj = QJsonDocument::fromJson(answerJson).object();
-    auto answersArray = answerObj["answers"].toArray();
-    return answersArray[0].toString();
+    auto answersObj = QJsonDocument::fromJson(answerJson).object();
+    auto answersArray = answersObj["answers"].toArray();
+    auto answerObj = answersArray[0].toObject();
+    auto answer = answerObj["answer"].toString();
+    auto score = answerObj["score"].toDouble();
+    if (score > 0)
+        return answer;
+    else
+        return QString();
 }
 
 }

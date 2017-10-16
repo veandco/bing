@@ -5,6 +5,7 @@ set(CMAKE_CXX_FLAGS "-std=c++11 -g -Wall -Wextra")
 
 # Qt
 find_package(Qt5Core)
+find_package(Qt5Concurrent)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 find_package(PkgConfig REQUIRED)
@@ -71,6 +72,7 @@ target_link_libraries(
   bing
   ${LIBSOUP_LIBRARIES}
   Qt5::Core
+  Qt5::Concurrent
 )
 
 # Install
