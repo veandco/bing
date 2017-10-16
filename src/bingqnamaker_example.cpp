@@ -12,6 +12,7 @@ int main(int argc, char **argv)
     Bing::QnaMaker qnaMaker;
 
     qnaMaker.setSubscriptionKey("e22732045a634d6e84ae3219dc6ec035");
+    qnaMaker.setKnowledgeBaseId("8d8e2374-3338-495e-ac74-7657a8b68394");
     QtConcurrent::run([&qnaMaker]() {
         string question;
 
@@ -21,7 +22,7 @@ int main(int argc, char **argv)
             if (question.empty())
                 continue;
 
-            auto answer = qnaMaker.generateAnswer(QString::fromStdString(question), "8d8e2374-3338-495e-ac74-7657a8b68394");
+            auto answer = qnaMaker.generateAnswer(QString::fromStdString(question));
             if (answer.isEmpty())
                 cout << "No answer :(" << endl;
             else

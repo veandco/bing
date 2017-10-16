@@ -30,11 +30,23 @@ void QnaMaker::setSubscriptionKey(const QString &subscriptionKey)
     mSubscriptionKey = subscriptionKey;
 }
 
+void QnaMaker::setKnowledgeBaseId(const QString &knowledgeBaseId)
+{
+    mKnowledgeBaseId = knowledgeBaseId;
+}
+
 QString QnaMaker::generateAnswer(const QString &question, const QString &knowledgeBaseId, int count)
 {
     SoupMessage *msg;
     SoupMessageBody *body;
-    QString url = "https://westus.api.cognitive.microsoft.com/qnamaker/v2.0/knowledgebases/" + knowledgeBaseId + "/generateAnswer";
+    QString url = "https://westus.api.cognitive.microsoft.com/qnamaker/v2.0/knowledgebases/";
+
+    if (!knowledgeBaseId.isEmpty())
+        url += knowledgeBaseId + "/generateAnswer";
+    else if (knowledgeBaseId.isEmpty() && !mKnowledgeBaseId.isEmpty())
+        url += mKnowledgeBaseId + "/generateAnswer";
+    else
+        return QString();
 
     // Build request JSON
     QJsonObject obj;
