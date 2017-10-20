@@ -16,12 +16,21 @@ const QString INTERACTIVE_URL      = "https://speech.platform.bing.com/speech/re
 const QString SYNTHESIZE_URL       = "https://speech.platform.bing.com/synthesize";
 const int     RENEW_TOKEN_INTERVAL = 9; // Minutes before renewing token
 
-Speech::Speech(QObject *parent) :
+Speech::Speech(int log, QObject *parent) :
     QObject(parent),
     mRenewTokenTimer(nullptr)
 {
     SoupLogger *logger;
-    SoupLoggerLogLevel logLevel = SOUP_LOGGER_LOG_BODY;
+    SoupLoggerLogLevel logLevel;
+
+    if (log <= 0)
+        logLevel = SOUP_LOGGER_LOG_NONE;
+    else if (log == 1)
+        logLevel = SOUP_LOGGER_LOG_MINIMAL;
+    else if (log == 2)
+        logLevel = SOUP_LOGGER_LOG_HEADERS;
+    else
+        logLevel = SOUP_LOGGER_LOG_BODY;
 
     mSession = soup_session_new_with_options(SOUP_SESSION_ADD_FEATURE_BY_TYPE, SOUP_TYPE_CONTENT_SNIFFER, NULL);
     logger = soup_logger_new(logLevel, -1);

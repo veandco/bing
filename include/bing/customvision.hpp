@@ -9,7 +9,7 @@ namespace Bing {
 class CustomVision : public QObject {
     Q_OBJECT
 public:
-    CustomVision(QObject *parent = nullptr);
+    CustomVision(int log = 0, QObject *parent = nullptr);
     ~CustomVision();
 
     void setSubscriptionKey(const QString &subscriptionKey, bool isTrainingKey = false);

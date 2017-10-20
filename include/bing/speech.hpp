@@ -60,7 +60,7 @@ public:
     // Synthesize //
     ////////////////
 
-    Speech(QObject *parent = nullptr);
+    Speech(int log = 0, QObject *parent = nullptr);
     ~Speech();
 
     QString authenticate(const QString &subscriptionKey);

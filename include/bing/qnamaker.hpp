@@ -8,7 +8,7 @@ namespace Bing {
 class QnaMaker : public QObject {
     Q_OBJECT
 public:
-    QnaMaker(QObject *parent = nullptr);
+    QnaMaker(int log = 0, QObject *parent = nullptr);
     ~QnaMaker();
 
     void setSubscriptionKey(const QString &subscriptionKey);
