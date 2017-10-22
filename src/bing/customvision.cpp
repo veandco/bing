@@ -41,13 +41,14 @@ void CustomVision::setSubscriptionKey(const QString &subscriptionKey, bool isTra
     mIsTraining = isTrainingKey;
 }
 
-void CustomVision::predict(const QImage &image, const QString &projectId, const QString &iterationId)
+QList<Prediction> CustomVision::predict(const QImage &image, const QString &projectId, const QString &iterationId)
 {
     SoupMessage *msg;
     SoupMessageBody *body;
     QByteArray imageData;
     QBuffer imageBuffer(&imageData);
     QString url = "https://southcentralus.api.cognitive.microsoft.com/customvision/v1.0/Prediction/" + projectId + "/image";
+    QList<Prediction> predictions;
 
     imageBuffer.open(QIODevice::WriteOnly);
     image.save(&imageBuffer, "JPEG");
@@ -63,19 +64,19 @@ void CustomVision::predict(const QImage &image, const QString &projectId, const 
     soup_session_send_message(mSession, msg);
     g_object_get(msg, "response-body", &body, NULL);
 
-    // Get answer
-    /*
-    QByteArray answerJson(body->data, body->length);
-    auto answersObj = QJsonDocument::fromJson(answerJson).object();
-    auto answersArray = answersObj["answers"].toArray();
-    auto answerObj = answersArray[0].toObject();
-    auto answer = answerObj["answer"].toString();
-    auto score = answerObj["score"].toDouble();
-    if (score > 0)
-        return answer;
-    else
-        return QString();
-    */
+    QByteArray responseJson(body->data, body->length);
+    auto responseObj = QJsonDocument::fromJson(responseJson).object();
+    auto predictionsArray = responseObj["Predictions"].toArray();
+    for (auto i = 0; i < predictionsArray.size(); i++) {
+        auto predictionObj = predictionsArray[i].toObject();
+        Prediction prediction;
+        prediction.tag = predictionObj["Tag"].toString();
+        prediction.tagId = predictionObj["TagId"].toString();
+        prediction.probability = predictionObj["Probability"].toDouble();
+        predictions.push_back(prediction);
+    }
+
+    return predictions;
 }
 
 }
