@@ -98,6 +98,6 @@ install(TARGETS bing DESTINATION lib)
 install(TARGETS bingspeech_recognition_example DESTINATION bin)
 install(TARGETS bingspeech_synthesis_example DESTINATION bin)
 install(
-    DIRECTORY include/ DESTINATION include PATTERN "*.hpp"
+    DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN "*.hpp"
     PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 )
