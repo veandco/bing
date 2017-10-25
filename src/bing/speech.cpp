@@ -153,11 +153,9 @@ Speech::RecognitionResponse Speech::parseRecognitionResponse(const QByteArray &d
 bool Speech::hasSynthesizeCache(const QString &text, const Voice::Font &font) const
 {
     auto path = Speech::cachePath(text, font);
-    auto pathDup = strdup(path.toUtf8().data());
-    QDir dir(QString(dirname(pathDup)));
+    QFile file(path);
 
-    free(pathDup);
-    return dir.exists();
+    return file.exists();
 }
 
 QByteArray Speech::loadSynthesizeCache(const QString &text, const Voice::Font &font)
@@ -180,7 +178,8 @@ bool Speech::saveSynthesizeCache(const QByteArray &data, const QString &text, co
         dir.mkpath(dir.path());
 
     if (!file.open(QIODevice::WriteOnly))
-        qDebug() << file.error();
+        return false;
+
     return file.write(data) >= 0;
 }
 
