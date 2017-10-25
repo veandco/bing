@@ -191,7 +191,7 @@ QString Speech::cachePath(const QString &text, const Voice::Font &font)
     filePath.append(font.lang + "/");
     filePath.append(font.gender + "/");
     filePath.append(font.name + "/");
-    filePath.append(text);
+    filePath.append(text.trimmed().toLower());
 
     return filePath;
 }
