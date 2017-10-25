@@ -9,6 +9,7 @@ int main()
     FILE *file;
 
     // Initialize Bing Speech
+    speech.setCache(true);
     speech.authenticate("7394827f916d4b48b7a3feb7bfe62aa1");
 
     // Recognize text from the audio data

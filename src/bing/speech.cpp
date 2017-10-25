@@ -4,10 +4,14 @@
 #include <cstdlib>
 #include <cstring>
 #include <sstream>
+#include <QDir>
+#include <QFile>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QTimer>
+#include <QDebug>
+#include <libgen.h>
 
 namespace Bing {
 
@@ -18,7 +22,8 @@ const int     RENEW_TOKEN_INTERVAL = 9; // Minutes before renewing token
 
 Speech::Speech(int log, QObject *parent) :
     QObject(parent),
-    mRenewTokenTimer(nullptr)
+    mRenewTokenTimer(nullptr),
+    mCache(true)
 {
     SoupLogger *logger;
     SoupLoggerLogLevel logLevel;
@@ -83,6 +88,11 @@ QString Speech::fetchToken(const QString &subscriptionKey)
     return QByteArray(body->data, body->length);
 }
 
+void Speech::setCache(bool cache)
+{
+    mCache = cache;
+}
+
 void Speech::renewToken()
 {
     mToken.clear();
@@ -138,6 +148,53 @@ Speech::RecognitionResponse Speech::parseRecognitionResponse(const QByteArray &d
     }
 
     return res;
+}
+
+bool Speech::hasSynthesizeCache(const QString &text, const Voice::Font &font) const
+{
+    auto path = Speech::cachePath(text, font);
+    auto pathDup = strdup(path.toUtf8().data());
+    QDir dir(QString(dirname(pathDup)));
+
+    free(pathDup);
+    return dir.exists();
+}
+
+QByteArray Speech::loadSynthesizeCache(const QString &text, const Voice::Font &font)
+{
+    QFile file(cachePath(text, font));
+
+    file.open(QIODevice::ReadOnly);
+    return file.readAll();
+}
+
+bool Speech::saveSynthesizeCache(const QByteArray &data, const QString &text, const Voice::Font &font)
+{
+    auto path = cachePath(text, font);
+    auto pathDup = strdup(path.toUtf8().data());
+    QFile file(path);
+    QDir dir(QString(dirname(pathDup)));
+
+    free(pathDup);
+    if (!dir.exists())
+        dir.mkpath(dir.path());
+
+    if (!file.open(QIODevice::WriteOnly))
+        qDebug() << file.error();
+    return file.write(data) >= 0;
+}
+
+QString Speech::cachePath(const QString &text, const Voice::Font &font)
+{
+    QString filePath;
+
+    filePath.append("/var/cache/bing/");
+    filePath.append(font.lang + "/");
+    filePath.append(font.gender + "/");
+    filePath.append(font.name + "/");
+    filePath.append(text);
+
+    return filePath;
 }
 
 bool Speech::RecognitionResponse::hasMatch() const
@@ -213,6 +270,11 @@ namespace Voice {
 
 QByteArray Speech::synthesize(const QString &text, Voice::Font font)
 {
+    QByteArray result;
+
+    if (mCache && hasSynthesizeCache(text, font))
+        return loadSynthesizeCache(text, font);
+
     SoupMessage *msg;
     SoupMessageBody *body;
     QString auth = "Bearer " + mToken;
@@ -229,7 +291,11 @@ QByteArray Speech::synthesize(const QString &text, Voice::Font font)
     soup_session_send_message(mSession, msg);
     g_object_get(msg, "response-body", &body, NULL);
 
-    return QByteArray(body->data, body->length);
+    result = QByteArray(body->data, body->length);
+    if (mCache)
+        saveSynthesizeCache(result, text, font);
+
+    return result;
 }
 
 }

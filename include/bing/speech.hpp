@@ -66,6 +66,7 @@ public:
     QString authenticate(const QString &subscriptionKey);
     QString token() const;
     QString fetchToken(const QString &subscriptionKey);
+    void setCache(bool cache);
 
     RecognitionResponse recognize(const QByteArray &data, const QString &lang = "en-US");
     QByteArray synthesize(const QString &text, Voice::Font font = Voice::en_US::ZiraRUS);
@@ -75,8 +76,14 @@ private:
     QString       mSubscriptionKey;
     QString       mToken;
     QTimer *      mRenewTokenTimer;
+    bool          mCache;
 
     RecognitionResponse parseRecognitionResponse(const QByteArray &data);
+    bool hasSynthesizeCache(const QString &text, const Voice::Font &font) const;
+    QByteArray loadSynthesizeCache(const QString &text, const Voice::Font &font);
+    bool saveSynthesizeCache(const QByteArray &data, const QString &text, const Voice::Font &font);
+
+    static QString cachePath(const QString &text, const Voice::Font &font);
 
 private slots:
     void renewToken();
