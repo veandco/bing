@@ -1,4 +1,5 @@
 #include "bing/speech.hpp"
+#include "bing/exception.hpp"
 
 #include <cstdio>
 #include <cstdlib>
@@ -112,9 +113,11 @@ Speech::RecognitionResponse Speech::recognize(const QByteArray &data, const QStr
     msg = soup_message_new("POST", url.toUtf8().data());
     soup_message_set_request(msg, "audio/wav; codec=\"\"audio/pcm\"\"; samplerate=16000", SOUP_MEMORY_COPY, data.data(), data.size());
     soup_message_headers_append(msg->request_headers, "Authorization", auth.toUtf8().data());
-    soup_session_send_message(mSession, msg);
-    g_object_get(msg, "response-body", &body, NULL);
+    int httpStatusCode = soup_session_send_message(mSession, msg);
+    if (httpStatusCode >= 400)
+        throw Exception(HTTPError);
 
+    g_object_get(msg, "response-body", &body, NULL);
     return parseRecognitionResponse(QByteArray(body->data, body->length));
 }
 
@@ -287,12 +290,17 @@ QByteArray Speech::synthesize(const QString &text, Voice::Font font)
     soup_message_headers_append(msg->request_headers, "Authorization", auth.toUtf8().data());
     soup_message_headers_append(msg->request_headers, "X-Microsoft-OutputFormat", format.toUtf8().data());
     soup_message_headers_append(msg->request_headers, "User-Agent", "libbing");
-    soup_session_send_message(mSession, msg);
-    g_object_get(msg, "response-body", &body, NULL);
 
+    int httpStatusCode = soup_session_send_message(mSession, msg);
+    if (httpStatusCode >= 400)
+        throw Exception(HTTPError);
+
+    g_object_get(msg, "response-body", &body, NULL);
     result = QByteArray(body->data, body->length);
-    if (mCache)
-        saveSynthesizeCache(result, text, font);
+    if (mCache) {
+        if (!saveSynthesizeCache(result, text, font))
+            throw Exception(IOError);
+    }
 
     return result;
 }

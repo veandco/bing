@@ -1,4 +1,6 @@
 #include "bing/qnamaker.hpp"
+#include "bing/exception.hpp"
+
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -68,10 +70,12 @@ QString QnaMaker::generateAnswer(const QString &question, const QString &knowled
     msg = soup_message_new("POST", url.toUtf8().data());
     soup_message_set_request(msg, "application/json", SOUP_MEMORY_COPY, data.data(), data.size());
     soup_message_headers_append(msg->request_headers, "Ocp-Apim-Subscription-Key", mSubscriptionKey.toUtf8().data());
-    soup_session_send_message(mSession, msg);
-    g_object_get(msg, "response-body", &body, NULL);
+    int httpStatusCode = soup_session_send_message(mSession, msg);
+    if (httpStatusCode >= 400)
+        throw Exception(HTTPError);
 
     // Get answer
+    g_object_get(msg, "response-body", &body, NULL);
     QByteArray answerJson(body->data, body->length);
     auto answersObj = QJsonDocument::fromJson(answerJson).object();
     auto answersArray = answersObj["answers"].toArray();
