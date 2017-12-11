@@ -4,6 +4,8 @@
 # Executables
 bingspeech_recognition_example
 bingspeech_synthesis_example
+bingcustomvision_example
+bingqnamaker_example
 
 # Libraries
 *.a
