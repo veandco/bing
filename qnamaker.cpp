@@ -1,5 +1,5 @@
-#include "bing/qnamaker.hpp"
-#include "bing/exception.hpp"
+#include "qnamaker.hpp"
+#include "exception.hpp"
 
 #include <QJsonDocument>
 #include <QJsonObject>

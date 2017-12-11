@@ -1,5 +1,5 @@
-#include "bing/speech.hpp"
-#include "bing/exception.hpp"
+#include "speech.hpp"
+#include "exception.hpp"
 
 #include <cstdio>
 #include <cstdlib>
