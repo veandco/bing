@@ -19,18 +19,18 @@ include_directories(
 
 qt5_wrap_cpp(
   all_moc
-  include/bing/speech.hpp
-  include/bing/qnamaker.hpp
-  include/bing/customvision.hpp
+  speech.hpp
+  qnamaker.hpp
+  customvision.hpp
 )
 
 # Library
 add_library(
   bing
   SHARED
-  src/bing/speech.cpp
-  src/bing/qnamaker.cpp
-  src/bing/customvision.cpp
+  speech.cpp
+  qnamaker.cpp
+  customvision.cpp
   ${all_moc}
 )
 target_link_libraries(
@@ -42,7 +42,7 @@ target_link_libraries(
 # Bing Speech (Recognition)
 add_executable(
   bingspeech_recognition_example
-  src/bingspeech_recognition_example.cpp
+  examples/bingspeech_recognition_example.cpp
   ${all_moc}
 )
 target_link_libraries(
@@ -55,7 +55,7 @@ target_link_libraries(
 # Bing Speech (Synthesis)
 add_executable(
   bingspeech_synthesis_example
-  src/bingspeech_synthesis_example.cpp
+  examples/bingspeech_synthesis_example.cpp
   ${all_moc}
 )
 target_link_libraries(
@@ -68,7 +68,7 @@ target_link_libraries(
 # Bing QnaMaker
 add_executable(
   bingqnamaker_example
-  src/bingqnamaker_example.cpp
+  examples/bingqnamaker_example.cpp
   ${all_moc}
 )
 target_link_libraries(
@@ -82,7 +82,7 @@ target_link_libraries(
 # Bing Custom Vision
 add_executable(
   bingcustomvision_example
-  src/bingcustomvision_example.cpp
+  examples/bingcustomvision_example.cpp
   ${all_moc}
 )
 target_link_libraries(
@@ -98,6 +98,6 @@ install(TARGETS bing DESTINATION lib)
 install(TARGETS bingspeech_recognition_example DESTINATION bin)
 install(TARGETS bingspeech_synthesis_example DESTINATION bin)
 install(
-    DIRECTORY include/ DESTINATION include FILES_MATCHING PATTERN "*.hpp"
+    DIRECTORY . DESTINATION include FILES_MATCHING PATTERN "*.hpp"
     PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 )
