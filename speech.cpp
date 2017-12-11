@@ -21,11 +21,19 @@ const QString INTERACTIVE_URL      = "https://speech.platform.bing.com/speech/re
 const QString SYNTHESIZE_URL       = "https://speech.platform.bing.com/synthesize";
 const int     RENEW_TOKEN_INTERVAL = 9; // Minutes before renewing token
 
-Speech::Speech(int log, QObject *parent) :
-    QObject(parent),
-    mRenewTokenTimer(nullptr),
-    mCache(true)
+Speech *Speech::mInstance;
+SoupSession *Speech::mSession;
+QTimer *Speech::mRenewTokenTimer;
+QString Speech::mSubscriptionKey;
+QString Speech::mToken;
+QString Speech::mConnectionId;
+bool Speech::mCache;
+
+void Speech::init(int log)
 {
+    if (mSession)
+        return;
+
     SoupLogger *logger;
     SoupLoggerLogLevel logLevel;
 
@@ -44,7 +52,7 @@ Speech::Speech(int log, QObject *parent) :
     g_object_unref(logger);
 }
 
-Speech::~Speech()
+void Speech::destroy()
 {
     if (mSession) {
         g_object_unref(mSession);
@@ -52,14 +60,23 @@ Speech::~Speech()
     }
 
     mToken.clear();
+    delete mInstance;
+}
+
+Speech *Speech::instance()
+{
+    if (mInstance)
+        return mInstance;
+
+    return new Speech();
 }
 
 QString Speech::authenticate(const QString &subscriptionKey)
 {
-    mToken.clear();
     mSubscriptionKey = subscriptionKey;
-    mToken = Speech::fetchToken(mSubscriptionKey);
 
+    mToken.clear();
+    mToken = Speech::fetchToken(mSubscriptionKey);
 
     delete mRenewTokenTimer;
     mRenewTokenTimer = new QTimer(this);

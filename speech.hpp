@@ -33,6 +33,10 @@ namespace Voice {
 class Speech : public QObject {
     Q_OBJECT
 public:
+    static void init(int log);
+    static void destroy();
+    static Speech *instance();
+
     /////////////////
     // Recognition //
     /////////////////
@@ -61,9 +65,6 @@ public:
     // Synthesize //
     ////////////////
 
-    Speech(int log = 0, QObject *parent = nullptr);
-    ~Speech();
-
     QString authenticate(const QString &subscriptionKey);
     QString token() const;
     QString fetchToken(const QString &subscriptionKey);
@@ -73,18 +74,20 @@ public:
     QByteArray synthesize(const QString &text, Voice::Font font = Voice::en_US::ZiraRUS);
 
 private:
-    SoupSession * mSession;
-    QString       mSubscriptionKey;
-    QString       mToken;
-    QTimer *      mRenewTokenTimer;
-    bool          mCache;
+    static Speech *mInstance;
+    static SoupSession *mSession;
+    static QTimer *mRenewTokenTimer;
+    static QString mSubscriptionKey;
+    static QString mToken;
+    static QString mConnectionId;
+    static bool mCache;
+
+    static QString cachePath(const QString &text, const Voice::Font &font);
 
     RecognitionResponse parseRecognitionResponse(const QByteArray &data);
     bool hasSynthesizeCache(const QString &text, const Voice::Font &font) const;
     QByteArray loadSynthesizeCache(const QString &text, const Voice::Font &font);
     bool saveSynthesizeCache(const QByteArray &data, const QString &text, const Voice::Font &font);
-
-    static QString cachePath(const QString &text, const Voice::Font &font);
 
 private slots:
     void renewToken();
