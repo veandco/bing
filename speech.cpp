@@ -203,6 +203,11 @@ bool Speech::RecognitionResponse::hasMatch() const
     return recognitionStatus == "Success";
 }
 
+bool Speech::RecognitionResponse::isSilent() const
+{
+    return recognitionStatus == "InitialSilenceTimeout";
+}
+
 void Speech::RecognitionResponse::print() const
 {
     fprintf(stdout, "RecognitionStatus: %s\n", recognitionStatus.toUtf8().data());

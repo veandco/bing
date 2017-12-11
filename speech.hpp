@@ -47,6 +47,7 @@ public:
 
     struct RecognitionResponse {
         bool hasMatch() const;
+        bool isSilent() const;
         void print() const;
 
         QString recognitionStatus;
