@@ -93,11 +93,20 @@ target_link_libraries(
   Qt5::Gui
 )
 
+# Generate pkg-config
+set(DEST_DIR "${CMAKE_INSTALL_PREFIX}")
+set(PRIVATE_LIBS "-lbing")
+CONFIGURE_FILE("bing.pc.in" "bing.pc" @ONLY)
+
 # Install
 install(TARGETS bing DESTINATION lib)
 install(TARGETS bingspeech_recognition_example DESTINATION bin)
 install(TARGETS bingspeech_synthesis_example DESTINATION bin)
 install(
-    FILES "bing.hpp" "qnamaker.hpp" "speech.hpp" "customvision.hpp" "exception.hpp" DESTINATION include
+    FILES "bing.hpp" "qnamaker.hpp" "speech.hpp" "customvision.hpp" "exception.hpp" DESTINATION include/bing
+    PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
+)
+install(
+    FILES "bing.pc" DESTINATION lib/pkgconfig
     PERMISSIONS OWNER_READ OWNER_WRITE GROUP_READ WORLD_READ
 )
