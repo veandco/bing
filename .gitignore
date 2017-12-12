@@ -29,3 +29,6 @@ CTestTestfile.cmake
 # Qt
 moc_*
 *.cpp_parameters
+
+# PkgConfig
+*.pc
