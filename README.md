@@ -1,7 +1,7 @@
-# libbing
+# bing
 This is a Bing API library for C++.
 
-This is still a **work-in-progress**. **Nobody should use this!.**
+This is still a **work-in-progress**. **Nobody should use this for production!.**
 
 ## Requirements
 1. libsoup  
