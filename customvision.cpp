@@ -1,4 +1,4 @@
-#include "bing/customvision.hpp"
+#include "customvision.hpp"
 #include <QBuffer>
 #include <QJsonDocument>
 #include <QJsonObject>
