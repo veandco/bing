@@ -3,9 +3,9 @@ exec_prefix=${prefix}
 libdir=${prefix}/lib
 includedir=${prefix}/include/bing
 
-Name: libmylib
-Description: Mylib description.
-Version: 1.0
+Name: libbing
+Description: Bing API library.
+Version: 0.0.1
 
 Libs: -L${libdir} @PRIVATE_LIBS@
 Cflags: -I${includedir}
