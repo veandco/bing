@@ -4,6 +4,8 @@
 
 using namespace std;
 
+namespace Bing {
+
 enum Error {
     HTTPError = 1,
     IOError = 2,
@@ -46,3 +48,5 @@ private:
 
     int mErrorCode;
 };
+
+}
