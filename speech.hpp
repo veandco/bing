@@ -41,6 +41,12 @@ public:
     // Recognition //
     /////////////////
 
+    enum RecognitionMode {
+        Interactive = 0,
+        Dictation,
+        Conversation,
+    };
+
     struct RecognitionResult {
         double  confidence;
         QString lexical;
@@ -70,7 +76,7 @@ public:
     QString fetchToken(const QString &subscriptionKey);
     void setCache(bool cache);
 
-    RecognitionResponse recognize(const QByteArray &data, const QString &lang = "en-US");
+    RecognitionResponse recognize(const QByteArray &data, const QString &lang = "en-US", RecognitionMode mode = Interactive);
     QByteArray synthesize(const QString &text, Voice::Font font = Voice::en_US::ZiraRUS);
 
 private:

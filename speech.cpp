@@ -17,7 +17,7 @@
 namespace Bing {
 
 const QString FETCH_TOKEN_URI      = "https://api.cognitive.microsoft.com/sts/v1.0/issueToken";
-const QString INTERACTIVE_URL      = "https://speech.platform.bing.com/speech/recognition/interactive/cognitiveservices/v1";
+const QString RECOGNITION_URL      = "https://speech.platform.bing.com/speech/recognition/";
 const QString SYNTHESIZE_URL       = "https://speech.platform.bing.com/synthesize";
 const int     RENEW_TOKEN_INTERVAL = 9; // Minutes before renewing token
 
@@ -117,12 +117,27 @@ void Speech::renewToken()
     fprintf(stdout, "%s\n", "Renewed access token");
 }
 
-Speech::RecognitionResponse Speech::recognize(const QByteArray &data, const QString &lang)
+Speech::RecognitionResponse Speech::recognize(const QByteArray &data, const QString &lang, RecognitionMode mode)
 {
     Speech::RecognitionResponse res;
     SoupMessage *msg;
     SoupMessageBody *body;
-    QString url = INTERACTIVE_URL + "?language=" + lang + "&format=detailed";
+    QString modeString;
+
+    switch (mode) {
+    default:
+    case RecognitionMode::Interactive:
+        modeString = "interactive";
+        break;
+    case RecognitionMode::Dictation:
+        modeString = "dictation";
+        break;
+    case RecognitionMode::Conversation:
+        modeString = "conversation";
+        break;
+    }
+
+    QString url = RECOGNITION_URL + modeString + "/cognitiveservices/v1?language=" + lang + "&format=detailed";
     QString auth = "Bearer " + mToken;
 
     // Do POST request
