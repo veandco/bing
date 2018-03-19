@@ -41,6 +41,38 @@ public:
     // Recognition //
     /////////////////
 
+    enum RecognitionLanguage {
+        ArabicEgypt = 0,
+        CatalanSpain,
+        DanishDenmark,
+        GermanGermany,
+        EnglishAustralia,
+        EnglishCanada,
+        EnglishUnitedKingdom,
+        EnglishIndia,
+        EnglishNewZealand,
+        EnglishUnitedStates,
+        SpanishSpain,
+        SpanishMexico,
+        FinnishFinland,
+        FrenchCanada,
+        FrenchFrance,
+        HindiIndia,
+        ItalianItaly,
+        JapaneseJapan,
+        KoreanKorea,
+        NorwegianNorway,
+        DutchNetherlands,
+        PolishPoland,
+        PortugueseBrazil,
+        PortuguesePortugal,
+        RussianRussia,
+        SwedishSweden,
+        ChineseChina,
+        ChineseHongKong,
+        ChineseTaiwan,
+    };
+
     enum RecognitionMode {
         Interactive = 0,
         Dictation,
@@ -76,7 +108,7 @@ public:
     QString fetchToken(const QString &subscriptionKey);
     void setCache(bool cache);
 
-    RecognitionResponse recognize(const QByteArray &data, const QString &lang = "en-US", RecognitionMode mode = Interactive);
+    RecognitionResponse recognize(const QByteArray &data, RecognitionLanguage language = EnglishUnitedStates, RecognitionMode mode = Interactive);
     QByteArray synthesize(const QString &text, Voice::Font font = Voice::en_US::ZiraRUS);
 
 private:
@@ -89,6 +121,7 @@ private:
     static bool mCache;
 
     static QString cachePath(const QString &text, const Voice::Font &font);
+    static QString recognitionLanguageString(RecognitionLanguage language);
 
     RecognitionResponse parseRecognitionResponse(const QByteArray &data);
     bool hasSynthesizeCache(const QString &text, const Voice::Font &font) const;

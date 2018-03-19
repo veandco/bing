@@ -117,7 +117,7 @@ void Speech::renewToken()
     fprintf(stdout, "%s\n", "Renewed access token");
 }
 
-Speech::RecognitionResponse Speech::recognize(const QByteArray &data, const QString &lang, RecognitionMode mode)
+Speech::RecognitionResponse Speech::recognize(const QByteArray &data, RecognitionLanguage language, RecognitionMode mode)
 {
     Speech::RecognitionResponse res;
     SoupMessage *msg;
@@ -137,7 +137,7 @@ Speech::RecognitionResponse Speech::recognize(const QByteArray &data, const QStr
         break;
     }
 
-    QString url = RECOGNITION_URL + modeString + "/cognitiveservices/v1?language=" + lang + "&format=detailed";
+    QString url = RECOGNITION_URL + modeString + "/cognitiveservices/v1?language=" + recognitionLanguageString(language) + "&format=detailed";
     QString auth = "Bearer " + mToken;
 
     // Do POST request
@@ -339,6 +339,71 @@ QByteArray Speech::synthesize(const QString &text, Voice::Font font)
     }
 
     return result;
+}
+
+QString Speech::recognitionLanguageString(RecognitionLanguage language)
+{
+    switch (language) {
+    case ArabicEgypt:
+        return "ar-EG";
+    case CatalanSpain:
+        return "ca-ES";
+    case DanishDenmark:
+        return "da-DK";
+    case GermanGermany:
+        return "de-DE";
+    case EnglishAustralia:
+        return "en-AU";
+    case EnglishCanada:
+        return "en-CA";
+    case EnglishUnitedKingdom:
+        return "en-GB";
+    case EnglishIndia:
+        return "en-IN";
+    case EnglishNewZealand:
+        return "en-NZ";
+    default:
+    case EnglishUnitedStates:
+        return "en-US";
+    case SpanishSpain:
+        return "es-ES";
+    case SpanishMexico:
+        return "es-MX";
+    case FinnishFinland:
+        return "fi-FI";
+    case FrenchCanada:
+        return "fi-CA";
+    case FrenchFrance:
+        return "fi-FR";
+    case HindiIndia:
+        return "hi-IN";
+    case ItalianItaly:
+        return "it-IT";
+    case JapaneseJapan:
+        return "ja-JP";
+    case KoreanKorea:
+        return "ko-KR";
+    case NorwegianNorway:
+        return "nb-NO";
+    case DutchNetherlands:
+        return "nl-NL";
+    case PolishPoland:
+        return "pl-PL";
+    case PortugueseBrazil:
+        return "pl-BR";
+    case PortuguesePortugal:
+        return "pl-PT";
+    case RussianRussia:
+        return "ru-RU";
+    case SwedishSweden:
+        return "sv-SE";
+    case ChineseChina:
+        return "zh-CN";
+    case ChineseHongKong:
+        return "zh-HK";
+    case ChineseTaiwan:
+        return "zh-TW";
+    }
 }
 
 }
