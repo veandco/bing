@@ -265,43 +265,567 @@ void Speech::RecognitionResponse::print() const
 ////////////////
 
 namespace Voice {
+    namespace ar_EG {
+        Font Hoda {
+            "ar-EG",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (ar-EG, Hoda)"
+        };
+    }
+
+    namespace ar_SA {
+        Font Naayf {
+            "ar-SA",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (ar-SA, Naayf)"
+        };
+    }
+
+    namespace bg_BG {
+        Font Ivan {
+            "bg-BG",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (bg-BG, Ivan)"
+        };
+    }
+
+    namespace ca_ES {
+        Font HerenaRUS {
+            "ca-ES",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (ca-ES, HerenaRUS)"
+        };
+    }
+
+    namespace ca_CZ {
+        Font Jakub {
+            "ca-CZ",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (cs-CZ, Jakub)"
+        };
+    }
+
+    namespace da_DK {
+        Font HelleRUS {
+            "da-DK",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (da-DK, HelleRUS)"
+        };
+    }
+
+    namespace de_AT {
+        Font Michael {
+            "de-AT",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (de-AT, Michael)"
+        };
+    }
+
+    namespace de_CH {
+        Font Karsten {
+            "de-CH",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (de-CH, Karsten)"
+        };
+    }
+
+    namespace de_DE {
+        Font Hedda {
+            "de-DE",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (de-DE, Hedda)"
+        };
+
+        Font HeddaRUS {
+            "de-DE",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (de-DE, HeddaRUS)"
+        };
+
+        Font StefanApollo {
+            "de-DE",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (de-DE, Stefan, Apollo)"
+        };
+    }
+
+    namespace el_GR {
+        Font Stefanos {
+            "el-GR",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (el-GR, Stefanos)"
+        };
+    }
+
+    namespace en_AU {
+        Font Catherine {
+            "en-AU",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (en-AU, Catherine)"
+        };
+
+        Font HayleyRUS {
+            "en-AU",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (en-AU, HayleyRUS)"
+        };
+    }
+
+    namespace en_CA {
+        Font Linda {
+            "en-CA",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (en-CA, Linda)"
+        };
+
+        Font HeatherRUS {
+            "en-CA",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (en-CA, HeatherRUS)"
+        };
+    }
+
+    namespace en_GB {
+        Font SusanApollo {
+            "en-GB",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (en-GB, Susan, Apollo)"
+        };
+
+        Font HazelRUS {
+            "en-GB",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (en-GB, HazelRUS)"
+        };
+
+        Font GeorgeApollo {
+            "en-GB",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (en-GB, George, Apollo)"
+        };
+    }
+
+    namespace en_IE {
+        Font Sean {
+            "en-IE",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (en-IE, Sean)"
+        };
+    }
+
+    namespace en_IN {
+        Font HeeraApollo {
+            "en-IN",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (en-IN, Heera, Apollo)"
+        };
+
+        Font PriyaRUS {
+            "en-IN",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (en-IN, PriyaRUS)"
+        };
+
+        Font RaviApollo {
+            "en-IN",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (en-IN, Ravi, Apollo)"
+        };
+    }
+
     namespace en_US {
-        Font ZiraRUS = Font {
+        Font ZiraRUS {
             "en-US",
             "Female",
             "Microsoft Server Speech Text to Speech Voice (en-US, ZiraRUS)"
         };
 
-        Font JessaRUS = Font {
+        Font JessaRUS {
             "en-US",
             "Female",
             "Microsoft Server Speech Text to Speech Voice (en-US, JessaRUS)"
         };
 
-        Font BenjaminRUS = Font {
+        Font BenjaminRUS {
             "en-US",
             "Male",
             "Microsoft Server Speech Text to Speech Voice (en-US, BenjaminRUS)"
         };
     }
 
+    namespace es_ES {
+        Font LauraApollo {
+            "es-ES",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (es-ES, Laura, Apollo)"
+        };
+
+        Font HelenaRUS {
+            "es-ES",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (es-ES, HelenaRUS)"
+        };
+
+        Font PabloApollo {
+            "es-ES",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (es-ES, Pablo, Apollo)"
+        };
+    }
+
+    namespace es_MX {
+        Font HildaRUS {
+            "es-MX",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (es-MX, HildaRUS)"
+        };
+
+        Font RaulApollo {
+            "es-MX",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (es-MX, Raul, Apollo)"
+        };
+    }
+
+    namespace fi_FI {
+        Font HeidiRUS {
+            "fi-FI",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (fi-FI, HeidiRUS)"
+        };
+    }
+
+    namespace fr_CA {
+        Font Caroline {
+            "fr-CA",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (fr-CA, Caroline)"
+        };
+
+        Font HarmonieRUS {
+            "fr-CA",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (fr-CA, HarmonieRUS)"
+        };
+    }
+
+    namespace fr_CH {
+        Font Guillaume {
+            "fr-CH",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (fr-CH, Guillaume)"
+        };
+    }
+
+    namespace fr_FR {
+        Font JulieApollo {
+            "fr-FR",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (fr-FR, JulieApollo)"
+        };
+
+        Font HortenseRUS {
+            "fr-FR",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (fr-FR, HortenseRUS)"
+        };
+
+        Font PaulApollo {
+            "fr-FR",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (fr-FR, PaulApollo)"
+        };
+    }
+
+    namespace he_IL {
+        Font Asaf {
+            "he-IL",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (he-IL, Asaf)"
+        };
+    }
+
+    namespace hi_IN {
+        Font KalpanaApollo {
+            "hi-IN",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (hi-IN, Kalpana, Apollo)"
+        };
+
+        Font Kalpana {
+            "hi-IN",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (hi-IN, Kalpana)"
+        };
+
+        Font Hemant {
+            "hi-IN",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (hi-IN, Hemant)"
+        };
+    }
+
+    namespace hr_HR {
+        Font Matej {
+            "hr-HR",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (hr-HR, Matej)"
+        };
+    }
+
+    namespace hu_HU {
+        Font Szabolcs {
+            "hu-HU",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (hu-HU, Szabolcs)"
+        };
+    }
+
+    namespace id_ID {
+        Font Andika {
+            "id-ID",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (id-ID, Andika)"
+        };
+    }
+
+    namespace it_IT {
+        Font CosimaApollo {
+            "it-IT",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (it-IT, Cosimo, Apollo)"
+        };
+    }
+
+    namespace ja_JP {
+        Font AyumiApollo {
+            "ja-JP",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (ja-JP, Ayumi, Apollo)"
+        };
+
+        Font IchiroApollo {
+            "ja-JP",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (ja-JP, Ichiro, Apollo)"
+        };
+
+        Font HarukaRUS {
+            "ja-JP",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (ja-JP, HarukaRUS)"
+        };
+
+        Font LuciaRUS {
+            "ja-JP",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (ja-JP, LuciaRUS)"
+        };
+
+        Font EkaterinaRUS {
+            "ja-JP",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (ja-JP, EkaterinaRUS)"
+        };
+    }
+
+    namespace ko_KR {
+        Font HeamiRUS {
+            "ko-KR",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (ko-KR, HeamiRUS)"
+        };
+    }
+
+    namespace ms_MY {
+        Font Rizwan {
+            "ms-MY",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (ms-MY, Rizwan)"
+        };
+    }
+
+    namespace nb_NO {
+        Font HuldaRUS {
+            "nb-NO",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (nb-NO, HuldaRUS)"
+        };
+    }
+
+    namespace nl_NL {
+        Font HannaRUS {
+            "nl-NL",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (nl-NL, HannaRUS)"
+        };
+    }
+
+    namespace pl_PL {
+        Font PaulinaRUS {
+            "pl-PL",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (pl-PL, PaulinaRUS)"
+        };
+    }
+
+    namespace pt_BR {
+        Font HeloisaRUS {
+            "pt-BR",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (pt-BR, HeloisaRUS)"
+        };
+
+        Font DanielApollo {
+            "pt-BR",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (pt-BR, DanielApollo)"
+        };
+    }
+
+    namespace pt_PT {
+        Font HeliaRUS {
+            "pt-PT",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (pt-PT, HeliaRUS)"
+        };
+    }
+
+    namespace ro_RO {
+        Font Andrei {
+            "ro-RO",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (ro-RO, Andrei)"
+        };
+    }
+
+    namespace ru_RU {
+        Font IrinaApollo {
+            "ru-RU",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (ru-RU, Irina, Apollo)"
+        };
+
+        Font PavelApollo {
+            "ru-RU",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (ru-RU, Pavel, Apollo)"
+        };
+    }
+
+    namespace sk_SK {
+        Font Filip {
+            "sk-SK",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (sk-SK, Filip)"
+        };
+    }
+
+    namespace sl_SI {
+        Font Lado {
+            "sl-SI",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (sl-SI, Lado)"
+        };
+    }
+
+    namespace sv_SE {
+        Font HedvigRUS {
+            "sv-SE",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (sv-SE, HedvigRUS)"
+        };
+    }
+
+    namespace ta_IN {
+        Font Valluvar {
+            "ta-IN",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (ta-IN, Valluvar)"
+        };
+    }
+
+    namespace th_TH {
+        Font Pattara {
+            "th-TH",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (th-TH, Pattara)"
+        };
+    }
+
+    namespace tr_TR {
+        Font SedaRUS {
+            "tr-TR",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (tr-TR, SedaRUS)"
+        };
+    }
+
+    namespace vi_VN {
+        Font An {
+            "vi-VN",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (vi-VN, An)"
+        };
+    }
+
     namespace zh_CN {
-        Font HuihuiRUS = Font {
+        Font HuihuiRUS {
             "zh-CN",
             "Female",
             "Microsoft Server Speech Text to Speech Voice (zh-CN, HuihuiRUS)"
         };
 
-        Font YaoyaoApollo = Font {
+        Font YaoyaoApollo {
             "zh-CN",
             "Female",
             "Microsoft Server Speech Text to Speech Voice (zh-CN, Yaoyao, Apollo)"
         };
 
-        Font KangkangApollo = Font {
+        Font KangkangApollo {
             "zh-CN",
             "Male",
             "Microsoft Server Speech Text to Speech Voice (zh-CN, Kangkang, Apollo)"
+        };
+    }
+
+    namespace zh_HK {
+        Font TracyApollo {
+            "zh-HK",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (zh-HK, Tracy, Apollo)"
+        };
+
+        Font TracyRUS {
+            "zh-HK",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (zh-HK, TracyRUS)"
+        };
+
+        Font DannyApollo {
+            "zh-HK",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (zh-HK, Danny, Apollo)"
+        };
+    }
+
+    namespace zh_TW {
+        Font YatingApollo {
+            "zh-TW",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (zh-TW, Yating, Apollo)"
+        };
+
+        Font HanHanRUS {
+            "zh-TW",
+            "Female",
+            "Microsoft Server Speech Text to Speech Voice (zh-TW, HanHanRUS)"
+        };
+
+        Font ZhiweiApollo {
+            "zh-TW",
+            "Male",
+            "Microsoft Server Speech Text to Speech Voice (zh-TW, Zhiwei, Apollo)"
         };
     }
 }
