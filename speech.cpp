@@ -97,7 +97,11 @@ QString Speech::fetchToken(const QString &subscriptionKey)
     SoupMessage *msg;
     SoupMessageBody *body;
 
-    msg = soup_message_new("POST", FETCH_TOKEN_URI.toUtf8().data());
+    if (mBaseUrl.isEmpty()) {
+        msg = soup_message_new("POST", FETCH_TOKEN_URI.toUtf8().data());
+    } else {
+        msg = soup_message_new("POST", "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken");
+    }
     soup_message_headers_append(msg->request_headers, "Content-Length", "0");
     soup_message_headers_append(msg->request_headers, "Ocp-Apim-Subscription-Key", subscriptionKey.toUtf8().data());
     soup_session_send_message(mSession, msg);
@@ -153,7 +157,19 @@ Speech::RecognitionResponse Speech::recognize(const QByteArray &data, Recognitio
 
     // Do POST request
     msg = soup_message_new("POST", url.toUtf8().data());
-    soup_message_set_request(msg, "audio/wav; codec=\"\"audio/pcm\"\"; samplerate=16000", SOUP_MEMORY_COPY, data.data(), data.size());
+    if (mBaseUrl.isEmpty()) {
+        soup_message_set_request(msg, "audio/wav; codec=\"\"audio/pcm\"\"; samplerate=16000", SOUP_MEMORY_COPY, data.data(), data.size());
+    } else {
+        QByteArray tmp = data;
+        unsigned char wav_header_bin[] = {
+            0x52, 0x49, 0x46, 0x46, 0xc4, 0x09, 0x01, 0x00, 0x57, 0x41, 0x56,
+            0x45, 0x66, 0x6d, 0x74, 0x20, 0x10, 0x00, 0x00, 0x00, 0x01, 0x00,
+            0x01, 0x00, 0x80, 0x3e, 0x00, 0x00, 0x00, 0x7d, 0x00, 0x00, 0x02,
+            0x00, 0x10, 0x00, 0x64, 0x61, 0x74, 0x61, 0xa0, 0x09, 0x01, 0x00
+        };
+        tmp.prepend(reinterpret_cast<const char *>(wav_header_bin));
+        soup_message_set_request(msg, "application/octet-stream", SOUP_MEMORY_COPY, tmp.data(), tmp.size());
+    }
     soup_message_headers_append(msg->request_headers, "Authorization", auth.toUtf8().data());
     int httpStatusCode = soup_session_send_message(mSession, msg);
     if (httpStatusCode >= 400)
