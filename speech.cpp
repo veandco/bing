@@ -27,6 +27,7 @@ QTimer *Speech::mRenewTokenTimer;
 QString Speech::mSubscriptionKey;
 QString Speech::mToken;
 QString Speech::mConnectionId;
+QString Speech::mBaseUrl;
 bool Speech::mCache;
 
 void Speech::init(int log)
@@ -110,6 +111,11 @@ void Speech::setCache(bool cache)
     mCache = cache;
 }
 
+void Speech::setBaseUrl(const QString &url)
+{
+    mBaseUrl = url;
+}
+
 void Speech::renewToken()
 {
     mToken.clear();
@@ -137,7 +143,12 @@ Speech::RecognitionResponse Speech::recognize(const QByteArray &data, Recognitio
         break;
     }
 
-    QString url = RECOGNITION_URL + modeString + "/cognitiveservices/v1?language=" + recognitionLanguageString(language) + "&format=detailed";
+    QString url;
+    if (mBaseUrl.isEmpty()) {
+        url = RECOGNITION_URL + modeString + "/cognitiveservices/v1?language=" + recognitionLanguageString(language) + "&format=detailed";
+    } else {
+        url = mBaseUrl + modeString + "/cognitiveservices/v1?language=" + recognitionLanguageString(language) + "&format=detailed";
+    }
     QString auth = "Bearer " + mToken;
 
     // Do POST request

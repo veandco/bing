@@ -314,6 +314,7 @@ public:
     QString token() const;
     QString fetchToken(const QString &subscriptionKey);
     void setCache(bool cache);
+    void setBaseUrl(const QString &url);
 
     RecognitionResponse recognize(const QByteArray &data, RecognitionLanguage language = EnglishUnitedStates, RecognitionMode mode = Interactive);
     QByteArray synthesize(const QString &text, Voice::Font font = Voice::en_US::ZiraRUS);
@@ -325,6 +326,7 @@ private:
     static QString mSubscriptionKey;
     static QString mToken;
     static QString mConnectionId;
+    static QString mBaseUrl;
     static bool mCache;
 
     static QString cachePath(const QString &text, const Voice::Font &font);
