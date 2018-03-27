@@ -167,7 +167,7 @@ Speech::RecognitionResponse Speech::recognize(const QByteArray &data, Recognitio
             0x01, 0x00, 0x80, 0x3e, 0x00, 0x00, 0x00, 0x7d, 0x00, 0x00, 0x02,
             0x00, 0x10, 0x00, 0x64, 0x61, 0x74, 0x61, 0xa0, 0x09, 0x01, 0x00
         };
-        tmp.prepend(reinterpret_cast<const char *>(wav_header_bin));
+        tmp.prepend(QByteArray(reinterpret_cast<const char *>(wav_header_bin), 44));
         soup_message_set_request(msg, "application/octet-stream", SOUP_MEMORY_COPY, tmp.data(), tmp.size());
     }
     soup_message_headers_append(msg->request_headers, "Authorization", auth.toUtf8().data());
