@@ -13,7 +13,7 @@ int main()
     int nread;
 
     // Initialize Bing Speech
-    speech->authenticate("7394827f916d4b48b7a3feb7bfe62aa1");
+    speech->authenticate("7394827f916d4b48b7a3feb7bfe62aa1", "7394827f916d4b48b7a3feb7bfe62aa1");
 
     // Read raw signed 16-bit 16000hz audio file
     file = fopen("test.raw", "r+");

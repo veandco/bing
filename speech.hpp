@@ -310,9 +310,8 @@ public:
     // Synthesize //
     ////////////////
 
-    QString authenticate(const QString &subscriptionKey);
-    QString token() const;
-    QString fetchToken(const QString &subscriptionKey);
+    void authenticate(const QString &recognizerSubscriptionKey, const QString &synthesizerSubscriptionkey);
+    void fetchToken();
     void setCache(bool cache);
     void setBaseUrl(const QString &url);
 
@@ -323,8 +322,10 @@ private:
     static Speech *mInstance;
     static SoupSession *mSession;
     static QTimer *mRenewTokenTimer;
-    static QString mSubscriptionKey;
-    static QString mToken;
+    static QString mRecognizerSubscriptionKey;
+    static QString mSynthesizerSubscriptionKey;
+    static QString mRecognizerToken;
+    static QString mSynthesizerToken;
     static QString mConnectionId;
     static QString mBaseUrl;
     static bool mCache;

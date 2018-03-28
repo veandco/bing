@@ -24,8 +24,10 @@ const int     RENEW_TOKEN_INTERVAL = 9; // Minutes before renewing token
 Speech *Speech::mInstance;
 SoupSession *Speech::mSession;
 QTimer *Speech::mRenewTokenTimer;
-QString Speech::mSubscriptionKey;
-QString Speech::mToken;
+QString Speech::mRecognizerSubscriptionKey;
+QString Speech::mRecognizerToken;
+QString Speech::mSynthesizerSubscriptionKey;
+QString Speech::mSynthesizerToken;
 QString Speech::mConnectionId;
 QString Speech::mBaseUrl;
 bool Speech::mCache;
@@ -60,7 +62,8 @@ void Speech::destroy()
         mSession = NULL;
     }
 
-    mToken.clear();
+    mRecognizerToken.clear();
+    mSynthesizerToken.clear();
     delete mInstance;
 }
 
@@ -72,42 +75,46 @@ Speech *Speech::instance()
     return new Speech();
 }
 
-QString Speech::authenticate(const QString &subscriptionKey)
+void Speech::authenticate(const QString &recognizerSubscriptionKey, const QString &synthesizerSubscriptionKey)
 {
-    mSubscriptionKey = subscriptionKey;
+    mRecognizerSubscriptionKey = recognizerSubscriptionKey;
+    mSynthesizerSubscriptionKey = synthesizerSubscriptionKey;
 
-    mToken.clear();
-    mToken = Speech::fetchToken(mSubscriptionKey);
+    Speech::fetchToken();
 
     delete mRenewTokenTimer;
     mRenewTokenTimer = new QTimer(this);
     connect(mRenewTokenTimer, &QTimer::timeout, this, &Speech::renewToken);
     mRenewTokenTimer->start(RENEW_TOKEN_INTERVAL * 60 * 1000);
-
-    return mToken;
 }
 
-QString Speech::token() const
-{
-    return mToken;
-}
-
-QString Speech::fetchToken(const QString &subscriptionKey)
+void Speech::fetchToken()
 {
     SoupMessage *msg;
     SoupMessageBody *body;
 
+    mRecognizerToken.clear();
+    mSynthesizerToken.clear();
+
+    // Recognizer
     if (mBaseUrl.isEmpty()) {
         msg = soup_message_new("POST", FETCH_TOKEN_URI.toUtf8().data());
     } else {
         msg = soup_message_new("POST", "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken");
     }
     soup_message_headers_append(msg->request_headers, "Content-Length", "0");
-    soup_message_headers_append(msg->request_headers, "Ocp-Apim-Subscription-Key", subscriptionKey.toUtf8().data());
+    soup_message_headers_append(msg->request_headers, "Ocp-Apim-Subscription-Key", mRecognizerSubscriptionKey.toUtf8().data());
     soup_session_send_message(mSession, msg);
     g_object_get(msg, "response-body", &body, NULL);
+    mRecognizerToken = QByteArray(body->data, body->length);
 
-    return QByteArray(body->data, body->length);
+    // Synthesizer
+    msg = soup_message_new("POST", FETCH_TOKEN_URI.toUtf8().data());
+    soup_message_headers_append(msg->request_headers, "Content-Length", "0");
+    soup_message_headers_append(msg->request_headers, "Ocp-Apim-Subscription-Key", mSynthesizerSubscriptionKey.toUtf8().data());
+    soup_session_send_message(mSession, msg);
+    g_object_get(msg, "response-body", &body, NULL);
+    mSynthesizerToken = QByteArray(body->data, body->length);
 }
 
 void Speech::setCache(bool cache)
@@ -122,8 +129,7 @@ void Speech::setBaseUrl(const QString &url)
 
 void Speech::renewToken()
 {
-    mToken.clear();
-    mToken = Speech::fetchToken(mSubscriptionKey);
+    Speech::fetchToken();
     fprintf(stdout, "%s\n", "Renewed access token");
 }
 
@@ -153,7 +159,7 @@ Speech::RecognitionResponse Speech::recognize(const QByteArray &data, Recognitio
     } else {
         url = mBaseUrl + modeString + "/cognitiveservices/v1?language=" + recognitionLanguageString(language) + "&format=detailed";
     }
-    QString auth = "Bearer " + mToken;
+    QString auth = "Bearer " + mRecognizerToken;
 
     // Do POST request
     msg = soup_message_new("POST", url.toUtf8().data());
@@ -866,7 +872,7 @@ QByteArray Speech::synthesize(const QString &text, Voice::Font font)
 
     SoupMessage *msg;
     SoupMessageBody *body;
-    QString auth = "Bearer " + mToken;
+    QString auth = "Bearer " + mSynthesizerToken;
     QString format = "raw-16khz-16bit-mono-pcm";
     QString dataStr = "<speak version='1.0' xml:lang='en-US'><voice xml:lang='" + font.lang + "' xml:gender='" + font.gender + "' name='" + font.name + "'>" + text + "</voice></speak>";
     QByteArray data = dataStr.toUtf8();

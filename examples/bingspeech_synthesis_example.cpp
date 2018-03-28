@@ -10,7 +10,7 @@ int main()
 
     // Initialize Bing Speech
     speech.setCache(true);
-    speech.authenticate("7394827f916d4b48b7a3feb7bfe62aa1");
+    speech.authenticate("7394827f916d4b48b7a3feb7bfe62aa1", "7394827f916d4b48b7a3feb7bfe62aa1");
 
     // Recognize text from the audio data
     output = speech.synthesize("Hi there. Nice to meet you");
