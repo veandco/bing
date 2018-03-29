@@ -10,6 +10,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QCryptographicHash>
 #include <QTimer>
 #include <QDebug>
 #include <libgen.h>
@@ -235,7 +236,11 @@ QByteArray Speech::loadSynthesizeCache(const QString &text, const Voice::Font &f
 
 bool Speech::saveSynthesizeCache(const QByteArray &data, const QString &text, const Voice::Font &font)
 {
-    auto path = cachePath(text, font);
+    QCryptographicHash hash(QCryptographicHash::Sha1);
+    hash.addData(text.toLatin1().data());
+
+    QString cacheFilename = hash.result().toHex(0);
+    auto path = cachePath(cacheFilename, font);
     auto pathDup = strdup(path.toUtf8().data());
     QFile file(path);
     QDir dir(QString(dirname(pathDup)));
