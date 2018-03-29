@@ -236,11 +236,7 @@ QByteArray Speech::loadSynthesizeCache(const QString &text, const Voice::Font &f
 
 bool Speech::saveSynthesizeCache(const QByteArray &data, const QString &text, const Voice::Font &font)
 {
-    QCryptographicHash hash(QCryptographicHash::Sha1);
-    hash.addData(text.toLatin1().data());
-
-    QString cacheFilename = hash.result().toHex(0);
-    auto path = cachePath(cacheFilename, font);
+    auto path = cachePath(text, font);
     auto pathDup = strdup(path.toUtf8().data());
     QFile file(path);
     QDir dir(QString(dirname(pathDup)));
@@ -258,12 +254,15 @@ bool Speech::saveSynthesizeCache(const QByteArray &data, const QString &text, co
 QString Speech::cachePath(const QString &text, const Voice::Font &font)
 {
     QString filePath;
+    QCryptographicHash hash(QCryptographicHash::Sha1);
+    hash.addData(text.toLatin1().data());
+    QString cacheFilename = hash.result().toHex(0);
 
     filePath.append("/var/cache/bing/");
     filePath.append(font.lang + "/");
     filePath.append(font.gender + "/");
     filePath.append(font.name + "/");
-    filePath.append(text.trimmed().toLower());
+    filePath.append(cacheFilename);
 
     return filePath;
 }
