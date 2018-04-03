@@ -13,14 +13,15 @@ QnaMaker::QnaMaker(int log, QObject *parent) :
     SoupLogger *logger;
     SoupLoggerLogLevel logLevel;
 
-    if (log <= 0)
+    if (log <= 0) {
         logLevel = SOUP_LOGGER_LOG_NONE;
-    else if (log == 1)
+    } else if (log == 1) {
         logLevel = SOUP_LOGGER_LOG_MINIMAL;
-    else if (log == 2)
+    } else if (log == 2) {
         logLevel = SOUP_LOGGER_LOG_HEADERS;
-    else
+    } else {
         logLevel = SOUP_LOGGER_LOG_BODY;
+    }
 
     mSession = soup_session_new_with_options(SOUP_SESSION_ADD_FEATURE_BY_TYPE, SOUP_TYPE_CONTENT_SNIFFER, NULL);
     logger = soup_logger_new(logLevel, -1);
@@ -52,12 +53,13 @@ QString QnaMaker::generateAnswer(const QString &question, const QString &knowled
     SoupMessageBody *body;
     QString url = "https://westus.api.cognitive.microsoft.com/qnamaker/v2.0/knowledgebases/";
 
-    if (!knowledgeBaseId.isEmpty())
+    if (!knowledgeBaseId.isEmpty()) {
         url += knowledgeBaseId + "/generateAnswer";
-    else if (knowledgeBaseId.isEmpty() && !mKnowledgeBaseId.isEmpty())
+    } else if (knowledgeBaseId.isEmpty() && !mKnowledgeBaseId.isEmpty()) {
         url += mKnowledgeBaseId + "/generateAnswer";
-    else
+    } else {
         return QString();
+    }
 
     // Build request JSON
     QJsonObject obj;
@@ -71,8 +73,9 @@ QString QnaMaker::generateAnswer(const QString &question, const QString &knowled
     soup_message_set_request(msg, "application/json", SOUP_MEMORY_COPY, data.data(), data.size());
     soup_message_headers_append(msg->request_headers, "Ocp-Apim-Subscription-Key", mSubscriptionKey.toUtf8().data());
     int httpStatusCode = soup_session_send_message(mSession, msg);
-    if (httpStatusCode >= 400)
+    if (httpStatusCode >= 400) {
         throw Exception(HTTPError);
+    }
 
     // Get answer
     g_object_get(msg, "response-body", &body, NULL);
@@ -82,10 +85,10 @@ QString QnaMaker::generateAnswer(const QString &question, const QString &knowled
     auto answerObj = answersArray[0].toObject();
     auto answer = answerObj["answer"].toString();
     auto score = answerObj["score"].toDouble();
-    if (score > 0)
+    if (score > 0) {
         return answer;
-    else
-        return QString();
+    }
+    return QString();
 }
 
 }

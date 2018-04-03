@@ -35,20 +35,22 @@ bool Speech::mCache;
 
 void Speech::init(int log)
 {
-    if (mSession)
+    if (mSession) {
         return;
+    }
 
     SoupLogger *logger;
     SoupLoggerLogLevel logLevel;
 
-    if (log <= 0)
+    if (log <= 0) {
         logLevel = SOUP_LOGGER_LOG_NONE;
-    else if (log == 1)
+    } else if (log == 1) {
         logLevel = SOUP_LOGGER_LOG_MINIMAL;
-    else if (log == 2)
+    } else if (log == 2) {
         logLevel = SOUP_LOGGER_LOG_HEADERS;
-    else
+    } else {
         logLevel = SOUP_LOGGER_LOG_BODY;
+    }
 
     mSession = soup_session_new_with_options(SOUP_SESSION_ADD_FEATURE_BY_TYPE, SOUP_TYPE_CONTENT_SNIFFER, NULL);
     logger = soup_logger_new(logLevel, -1);
@@ -70,8 +72,9 @@ void Speech::destroy()
 
 Speech *Speech::instance()
 {
-    if (mInstance)
+    if (mInstance) {
         return mInstance;
+    }
 
     return new Speech();
 }
@@ -179,8 +182,9 @@ Speech::RecognitionResponse Speech::recognize(const QByteArray &data, Recognitio
     }
     soup_message_headers_append(msg->request_headers, "Authorization", auth.toUtf8().data());
     int httpStatusCode = soup_session_send_message(mSession, msg);
-    if (httpStatusCode >= 400)
+    if (httpStatusCode >= 400) {
         throw Exception(HTTPError);
+    }
 
     g_object_get(msg, "response-body", &body, NULL);
     return parseRecognitionResponse(QByteArray(body->data, body->length));
@@ -193,8 +197,9 @@ Speech::RecognitionResponse Speech::parseRecognitionResponse(const QByteArray &d
     QJsonDocument doc = QJsonDocument::fromJson(data, &error);
     QJsonObject root;
 
-    if (error.error != QJsonParseError::NoError)
+    if (error.error != QJsonParseError::NoError) {
         return res;
+    }
 
     root = doc.object();
     res.recognitionStatus = root["RecognitionStatus"].toString();
@@ -242,11 +247,13 @@ bool Speech::saveSynthesizeCache(const QByteArray &data, const QString &text, co
     QDir dir(QString(dirname(pathDup)));
 
     free(pathDup);
-    if (!dir.exists())
+    if (!dir.exists()) {
         dir.mkpath(dir.path());
+    }
 
-    if (!file.open(QIODevice::WriteOnly))
+    if (!file.open(QIODevice::WriteOnly)) {
         return false;
+    }
 
     return file.write(data) >= 0;
 }
@@ -871,8 +878,9 @@ QByteArray Speech::synthesize(const QString &text, Voice::Font font)
 {
     QByteArray result;
 
-    if (mCache && hasSynthesizeCache(text, font))
+    if (mCache && hasSynthesizeCache(text, font)) {
         return loadSynthesizeCache(text, font);
+    }
 
     SoupMessage *msg;
     SoupMessageBody *body;
@@ -889,14 +897,16 @@ QByteArray Speech::synthesize(const QString &text, Voice::Font font)
     soup_message_headers_append(msg->request_headers, "User-Agent", "libbing");
 
     int httpStatusCode = soup_session_send_message(mSession, msg);
-    if (httpStatusCode >= 400)
+    if (httpStatusCode >= 400) {
         throw Exception(HTTPError);
+    }
 
     g_object_get(msg, "response-body", &body, NULL);
     result = QByteArray(body->data, body->length);
     if (mCache) {
-        if (!saveSynthesizeCache(result, text, font))
+        if (!saveSynthesizeCache(result, text, font)) {
             throw Exception(IOError);
+        }
     }
 
     return result;
