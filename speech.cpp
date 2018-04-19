@@ -262,7 +262,7 @@ QString Speech::cachePath(const QString &text, const Voice::Font &font)
 {
     QString filePath;
     QCryptographicHash hash(QCryptographicHash::Sha1);
-    hash.addData(text.toLatin1().data());
+    hash.addData((char *) text.data(), text.size());
     QString cacheFilename = hash.result().toHex();
 
     filePath.append("/var/cache/bing/");
