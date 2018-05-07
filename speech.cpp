@@ -30,7 +30,7 @@ QString Speech::mRecognizerToken;
 QString Speech::mSynthesizerSubscriptionKey;
 QString Speech::mSynthesizerToken;
 QString Speech::mConnectionId;
-QString Speech::mBaseUrl;
+QString Speech::mEndpointId;
 bool Speech::mCache;
 
 void Speech::init(int log)
@@ -101,7 +101,7 @@ void Speech::fetchToken()
     mSynthesizerToken.clear();
 
     // Recognizer
-    if (mBaseUrl.isEmpty()) {
+    if (mEndpointId.isEmpty()) {
         msg = soup_message_new("POST", FETCH_TOKEN_URI.toUtf8().data());
     } else {
         msg = soup_message_new("POST", "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken");
@@ -126,9 +126,9 @@ void Speech::setCache(bool cache)
     mCache = cache;
 }
 
-void Speech::setBaseUrl(const QString &url)
+void Speech::setEndpointId(const QString &endpointId)
 {
-    mBaseUrl = url;
+    mEndpointId = endpointId;
 }
 
 void Speech::renewToken()
@@ -158,16 +158,16 @@ Speech::RecognitionResponse Speech::recognize(const QByteArray &data, Recognitio
     }
 
     QString url;
-    if (mBaseUrl.isEmpty()) {
+    if (mEndpointId.isEmpty()) {
         url = RECOGNITION_URL + modeString + "/cognitiveservices/v1?language=" + recognitionLanguageString(language) + "&format=detailed";
     } else {
-        url = mBaseUrl + modeString + "/cognitiveservices/v1?language=" + recognitionLanguageString(language) + "&format=detailed";
+        url = "https://westus.stt.speech.microsoft.com/speech/recognition/" + modeString + "/cognitiveservices/v1?cid=" + mEndpointId + "&format=detailed";
     }
     QString auth = "Bearer " + mRecognizerToken;
 
     // Do POST request
     msg = soup_message_new("POST", url.toUtf8().data());
-    if (mBaseUrl.isEmpty()) {
+    if (mEndpointId.isEmpty()) {
         soup_message_set_request(msg, "audio/wav; codec=\"\"audio/pcm\"\"; samplerate=16000", SOUP_MEMORY_COPY, data.data(), data.size());
     } else {
         QByteArray tmp = data;
