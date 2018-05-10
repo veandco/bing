@@ -265,6 +265,8 @@ QString Speech::cachePath(const QString &text, const Voice::Font &font)
     hash.addData((char *) text.data(), text.size());
     QString cacheFilename = hash.result().toHex();
 
+    qDebug() << "bing: speech.cpp: Cache path for" << text << "is" << cacheFilename;
+
     filePath.append("/var/cache/bing/");
     filePath.append(font.lang + "/");
     filePath.append(font.gender + "/");
