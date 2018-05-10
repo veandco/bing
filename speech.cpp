@@ -261,9 +261,7 @@ bool Speech::saveSynthesizeCache(const QByteArray &data, const QString &text, co
 QString Speech::cachePath(const QString &text, const Voice::Font &font)
 {
     QString filePath;
-    QCryptographicHash hash(QCryptographicHash::Sha1);
-    hash.addData((char *) text.data(), text.size());
-    QString cacheFilename = hash.result().toHex();
+    QString cacheFilename = QString("%1").arg(QString(QCryptographicHash::hash(text.toUtf8(), QCryptographicHash::Sha1).toHex()));
 
     qDebug() << "bing: speech.cpp: Cache path for" << text << "is" << cacheFilename;
 
