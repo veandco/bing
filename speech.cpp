@@ -241,6 +241,10 @@ QByteArray Speech::loadSynthesizeCache(const QString &text, const Voice::Font &f
 
 bool Speech::saveSynthesizeCache(const QByteArray &data, const QString &text, const Voice::Font &font)
 {
+    if (data.isEmpty()) {
+        return false;
+    }
+
     auto path = cachePath(text, font);
     auto pathDup = strdup(path.toUtf8().data());
     QFile file(path);
