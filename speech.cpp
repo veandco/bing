@@ -131,6 +131,18 @@ void Speech::setEndpointId(const QString &endpointId)
     mEndpointId = endpointId;
 }
 
+void Speech::setTimeout(unsigned int secs)
+{
+    if (!mSession) {
+        return;
+    }
+
+    char buf[256] = { 0 };
+    sprintf(buf, "%u", secs);
+    g_object_set(mSession, "idle-timeout", buf, NULL);
+    soup_session_abort(mSession);
+}
+
 void Speech::renewToken()
 {
     Speech::fetchToken();

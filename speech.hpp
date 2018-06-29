@@ -314,6 +314,7 @@ public:
     void fetchToken();
     void setCache(bool cache);
     void setEndpointId(const QString &endpointId);
+    void setTimeout(unsigned int secs);
 
     RecognitionResponse recognize(const QByteArray &data, RecognitionLanguage language = EnglishUnitedStates, RecognitionMode mode = Interactive);
     QByteArray synthesize(const QString &text, Voice::Font font = Voice::en_US::ZiraRUS);
