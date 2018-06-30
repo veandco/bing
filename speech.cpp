@@ -137,9 +137,8 @@ void Speech::setTimeout(unsigned int secs)
         return;
     }
 
-    char buf[256] = { 0 };
-    sprintf(buf, "%u", secs);
-    g_object_set(mSession, "idle-timeout", buf, NULL);
+    g_object_set(mSession, SOUP_SESSION_TIMEOUT, secs, NULL);
+    g_object_set(mSession, SOUP_SESSION_IDLE_TIMEOUT, secs, NULL);
     soup_session_abort(mSession);
 }
 
