@@ -193,8 +193,10 @@ Speech::RecognitionResponse Speech::recognize(const QByteArray &data, Recognitio
     }
     soup_message_headers_append(msg->request_headers, "Authorization", auth.toUtf8().data());
     int httpStatusCode = soup_session_send_message(mSession, msg);
-    if (httpStatusCode >= 400) {
+    if (SOUP_STATUS_IS_CLIENT_ERROR(httpStatusCode) || SOUP_STATUS_IS_SERVER_ERROR(httpStatusCode)) {
         throw Exception(HTTPError);
+    } else if (SOUP_STATUS_IS_TRANSPORT_ERROR(httpStatusCode)) {
+        throw Exception(IOError);
     }
 
     g_object_get(msg, "response-body", &body, NULL);
